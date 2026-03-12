@@ -1,0 +1,16 @@
+{
+  "classes": [
+    "BREACKER",
+    "IPHONE",
+    "TORNILLOS"
+  ],
+  "imgsz": 416,
+  "grid_size": 10,
+  "backbone": "MobileNetV2",
+  "epochs_requested": 30,
+  "epochs_ran": 13,
+  "train_samples": 24,
+  "val_samples": 6,
+  "collisions_ignored": 2,
+  "updated_at": "2026-03-12T17:35:45.693328"
+}

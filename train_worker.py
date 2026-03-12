@@ -157,8 +157,8 @@ def detection_loss(num_classes):
         box_loss_per_coord = tf.keras.losses.huber(
             box_true,
             box_pred,
-        )  # [B, G, G, 4]
-        box_loss = tf.reduce_mean(box_loss_per_coord, axis=-1) * obj_true
+        )  # Ya sale con forma [B, G, G] porque Keras reduce la última dimensión
+        box_loss = box_loss_per_coord * obj_true
 
         # 3) class loss -> [B, G, G]
         cls_loss = tf.nn.softmax_cross_entropy_with_logits(

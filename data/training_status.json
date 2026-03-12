@@ -1,8 +1,8 @@
 {
-  "status": "error",
-  "message": "Error durante entrenamiento: Dimensions must be equal, but are 8 and 10 for '{{node compile_loss/loss_fn/mul_3}} = Mul[T=DT_FLOAT](compile_loss/loss_fn/Mean_1, compile_loss/loss_fn/strided_slice)' with input shapes: [8,10], [8,10,10].",
-  "updated_at": "2026-03-12T17:28:43.271437",
-  "progress": 0,
+  "status": "completed",
+  "message": "Entrenamiento TensorFlow completado correctamente.",
+  "updated_at": "2026-03-12T17:35:45.696749",
+  "progress": 100,
   "config": {
     "epochs": 30,
     "imgsz": 416,
@@ -10,5 +10,30 @@
     "grid_size": 10,
     "backbone": "MobileNetV2",
     "val_ratio": 0.2
+  },
+  "metrics": {
+    "loss": 0.5244130492210388,
+    "val_loss": 0.7193400859832764
+  },
+  "best_model": "C:\\Users\\gzambrano\\OneDrive - gpsgroup.com.ec\\Documentos\\python\\vision_tf\\data\\models\\best.keras",
+  "model_meta": {
+    "classes": [
+      "BREACKER",
+      "IPHONE",
+      "TORNILLOS"
+    ],
+    "imgsz": 416,
+    "grid_size": 10,
+    "backbone": "MobileNetV2",
+    "epochs_requested": 30,
+    "epochs_ran": 13,
+    "train_samples": 24,
+    "val_samples": 6,
+    "collisions_ignored": 2,
+    "updated_at": "2026-03-12T17:35:45.693328"
+  },
+  "final_metrics": {
+    "loss": 0.5244130492210388,
+    "val_loss": 0.7193400859832764
   }
 }
