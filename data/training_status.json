@@ -1,19 +1,19 @@
 {
   "status": "completed",
   "message": "Entrenamiento TensorFlow completado correctamente.",
-  "updated_at": "2026-03-12T17:35:45.696749",
+  "updated_at": "2026-03-12T17:50:43.163826",
   "progress": 100,
   "config": {
     "epochs": 30,
     "imgsz": 416,
     "batch": 8,
     "grid_size": 10,
-    "backbone": "MobileNetV2",
+    "backbone": "EfficientNetB0",
     "val_ratio": 0.2
   },
   "metrics": {
-    "loss": 0.5244130492210388,
-    "val_loss": 0.7193400859832764
+    "loss": 0.6478897929191589,
+    "val_loss": 0.7259400486946106
   },
   "best_model": "C:\\Users\\gzambrano\\OneDrive - gpsgroup.com.ec\\Documentos\\python\\vision_tf\\data\\models\\best.keras",
   "model_meta": {
@@ -24,16 +24,16 @@
     ],
     "imgsz": 416,
     "grid_size": 10,
-    "backbone": "MobileNetV2",
+    "backbone": "EfficientNetB0",
     "epochs_requested": 30,
-    "epochs_ran": 13,
+    "epochs_ran": 7,
     "train_samples": 24,
     "val_samples": 6,
     "collisions_ignored": 2,
-    "updated_at": "2026-03-12T17:35:45.693328"
+    "updated_at": "2026-03-12T17:50:43.161825"
   },
   "final_metrics": {
-    "loss": 0.5244130492210388,
-    "val_loss": 0.7193400859832764
+    "loss": 0.6478897929191589,
+    "val_loss": 0.7259400486946106
   }
 }

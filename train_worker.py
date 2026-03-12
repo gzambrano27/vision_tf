@@ -7,6 +7,8 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
+import tensorflow as tf
+import keras
 
 
 def save_json(path: Path, value):
@@ -99,9 +101,16 @@ def split_data(annotations, val_ratio):
     return train, val
 
 
-def make_model(img_size, grid_size, num_classes, backbone_name='MobileNetV2'):
-    import tensorflow as tf
+# Registramos la función globalmente para que Keras pueda serializarla
+@keras.saving.register_keras_serializable()
+def split_heads(t):
+    obj = t[..., 0:1]
+    box = tf.sigmoid(t[..., 1:5])
+    cls = t[..., 5:]
+    return tf.concat([obj, box, cls], axis=-1)
 
+
+def make_model(img_size, grid_size, num_classes, backbone_name='MobileNetV2'):
     inputs = tf.keras.Input(shape=(img_size, img_size, 3), name='image')
     if backbone_name == 'EfficientNetB0':
         backbone = tf.keras.applications.EfficientNetB0(
@@ -124,19 +133,11 @@ def make_model(img_size, grid_size, num_classes, backbone_name='MobileNetV2'):
     x = tf.keras.layers.Conv2D((5 + num_classes), 1, padding='same')(x)
     x = tf.keras.layers.Resizing(grid_size, grid_size, interpolation='bilinear')(x)
 
-    def split_heads(t):
-        obj = t[..., 0:1]              # logits
-        box = tf.sigmoid(t[..., 1:5])  # 0..1
-        cls = t[..., 5:]               # logits
-        return tf.concat([obj, box, cls], axis=-1)
-
     outputs = tf.keras.layers.Lambda(split_heads, name='detector_output')(x)
     return tf.keras.Model(inputs, outputs, name='grid_detector_tf')
 
 
 def detection_loss(num_classes):
-    import tensorflow as tf
-
     def loss_fn(y_true, y_pred):
         obj_true = y_true[..., 0]          # [B, G, G]
         box_true = y_true[..., 1:5]        # [B, G, G, 4]
@@ -157,7 +158,7 @@ def detection_loss(num_classes):
         box_loss_per_coord = tf.keras.losses.huber(
             box_true,
             box_pred,
-        )  # Ya sale con forma [B, G, G] porque Keras reduce la última dimensión
+        )  
         box_loss = box_loss_per_coord * obj_true
 
         # 3) class loss -> [B, G, G]
@@ -178,7 +179,6 @@ class StatusCallback:
         self.total_epochs = total_epochs
 
     def __call__(self):
-        import tensorflow as tf
         status_file = self.status_file
         total_epochs = self.total_epochs
 
@@ -221,7 +221,6 @@ def main():
 
     update_status(status_file, status='running', progress=5, message='Cargando TensorFlow y preparando dataset...')
 
-    import tensorflow as tf
     tf.keras.utils.set_random_seed(42)
 
     annotations = load_json(Path(args.annotations), [])

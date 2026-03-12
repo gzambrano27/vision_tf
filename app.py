@@ -11,6 +11,8 @@ from xml.etree import ElementTree as ET
 from flask import Flask, jsonify, render_template, request, send_file, send_from_directory
 from PIL import Image
 from werkzeug.utils import secure_filename
+import tensorflow as tf
+import keras
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / 'data'
@@ -354,8 +356,15 @@ def api_train_status():
     return jsonify(load_json(STATUS_FILE, {'status': 'idle'}))
 
 
-_MODEL_CACHE = {'path': None, 'model': None, 'meta': None}
+# Registramos la función globalmente para que Keras pueda reconocerla al deserializar
+@keras.saving.register_keras_serializable()
+def split_heads(t):
+    obj = t[..., 0:1]
+    box = tf.sigmoid(t[..., 1:5])
+    cls = t[..., 5:]
+    return tf.concat([obj, box, cls], axis=-1)
 
+_MODEL_CACHE = {'path': None, 'model': None, 'meta': None}
 
 def get_model_and_meta():
     status = load_json(STATUS_FILE, {})
@@ -364,7 +373,8 @@ def get_model_and_meta():
         return None, None
     if _MODEL_CACHE['path'] == model_path and _MODEL_CACHE['model'] is not None:
         return _MODEL_CACHE['model'], _MODEL_CACHE['meta']
-    import tensorflow as tf
+    
+    # Cargamos el modelo
     model = tf.keras.models.load_model(model_path, compile=False)
     meta = load_json(MODEL_META_FILE, {})
     _MODEL_CACHE.update({'path': model_path, 'model': model, 'meta': meta})
@@ -382,7 +392,6 @@ def api_predict():
         return jsonify({'ok': False, 'error': 'No existe un modelo TensorFlow entrenado disponible todavía.'}), 400
 
     import numpy as np
-    import tensorflow as tf
 
     filename = secure_filename(file.filename)
     temp_input = PREDICTIONS_DIR / f'input_{filename}'
