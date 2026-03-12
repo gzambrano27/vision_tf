@@ -1,0 +1,16 @@
+{
+  "classes": [
+    "BREACKER",
+    "IPHONE",
+    "TORNILLOS"
+  ],
+  "num_images": 30,
+  "num_annotated_images": 30,
+  "generated_at": "2026-03-12T17:28:38.121149",
+  "export_dir": "C:\\Users\\gzambrano\\OneDrive - gpsgroup.com.ec\\Documentos\\python\\vision_tf\\data\\exports\\tensorflow_dataset",
+  "annotation_json": "C:\\Users\\gzambrano\\OneDrive - gpsgroup.com.ec\\Documentos\\python\\vision_tf\\data\\exports\\tensorflow_dataset\\annotations.json",
+  "formats": [
+    "Pascal VOC XML",
+    "JSON"
+  ]
+}

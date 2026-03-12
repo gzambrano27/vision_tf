@@ -1,0 +1,33 @@
+{
+  "filename": "iphone-16-blanco-doble-movistar_1_1.png",
+  "width": 700,
+  "height": 700,
+  "depth": 1,
+  "objects": [
+    {
+      "id": "id_h5xwdd3dj",
+      "label": "IPHONE",
+      "xmin": 73,
+      "ymin": 7,
+      "xmax": 623,
+      "ymax": 689
+    },
+    {
+      "id": "id_m9r1wwsc0",
+      "label": "IPHONE",
+      "xmin": 297,
+      "ymin": 12,
+      "xmax": 622,
+      "ymax": 690
+    },
+    {
+      "id": "id_6jqqockjv",
+      "label": "IPHONE",
+      "xmin": 75,
+      "ymin": 11,
+      "xmax": 301,
+      "ymax": 690
+    }
+  ],
+  "updated_at": "2026-03-12T16:58:29.135016"
+}

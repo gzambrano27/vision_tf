@@ -1,0 +1,17 @@
+{
+  "filename": "images_5.jpg",
+  "width": 275,
+  "height": 183,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_ahy7h35up",
+      "label": "TORNILLOS",
+      "xmin": 70,
+      "ymin": 13,
+      "xmax": 199,
+      "ymax": 157
+    }
+  ],
+  "updated_at": "2026-03-12T16:46:38.982947"
+}

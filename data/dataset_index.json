@@ -1,0 +1,708 @@
+[
+  {
+    "filename": "165226-800-auto.webp",
+    "width": 800,
+    "height": 800,
+    "depth": 3,
+    "thumbnail_url": "/uploads/165226-800-auto.webp",
+    "objects": [
+      {
+        "id": "id_9ed3b701z",
+        "label": "BREACKER",
+        "xmin": 225,
+        "ymin": 6,
+        "xmax": 564,
+        "ymax": 794
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.409751",
+    "updated_at": "2026-03-12T16:38:34.266850"
+  },
+  {
+    "filename": "165236-800-auto.webp",
+    "width": 800,
+    "height": 800,
+    "depth": 3,
+    "thumbnail_url": "/uploads/165236-800-auto.webp",
+    "objects": [
+      {
+        "id": "id_s3g57668i",
+        "label": "BREACKER",
+        "xmin": 155,
+        "ymin": 4,
+        "xmax": 641,
+        "ymax": 797
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.413773",
+    "updated_at": "2026-03-12T16:39:07.158622"
+  },
+  {
+    "filename": "165276-800-auto.webp",
+    "width": 800,
+    "height": 800,
+    "depth": 3,
+    "thumbnail_url": "/uploads/165276-800-auto.webp",
+    "objects": [
+      {
+        "id": "id_f71gokax9",
+        "label": "BREACKER",
+        "xmin": 208,
+        "ymin": 31,
+        "xmax": 593,
+        "ymax": 764
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.419043",
+    "updated_at": "2026-03-12T16:39:37.061375"
+  },
+  {
+    "filename": "165282-800-auto.webp",
+    "width": 800,
+    "height": 800,
+    "depth": 3,
+    "thumbnail_url": "/uploads/165282-800-auto.webp",
+    "objects": [
+      {
+        "id": "id_mngc2fof1",
+        "label": "BREACKER",
+        "xmin": 63,
+        "ymin": 41,
+        "xmax": 721,
+        "ymax": 756
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.423066",
+    "updated_at": "2026-03-12T16:39:54.448243"
+  },
+  {
+    "filename": "BREAKER_DIFERENCIAL_16A_NXBLE-32_1PN_C16_819392_CH.png",
+    "width": 600,
+    "height": 600,
+    "depth": 3,
+    "thumbnail_url": "/uploads/BREAKER_DIFERENCIAL_16A_NXBLE-32_1PN_C16_819392_CH.png",
+    "objects": [
+      {
+        "id": "id_v8h84e4c0",
+        "label": "BREACKER",
+        "xmin": 124,
+        "ymin": 26,
+        "xmax": 474,
+        "ymax": 574
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.428978",
+    "updated_at": "2026-03-12T16:40:05.032258"
+  },
+  {
+    "filename": "BREAKER_TRIFASICO_70-100A_.440V_.25KA._3VM1110-3EE32-0AA0_COD__S29100.jpg",
+    "width": 600,
+    "height": 600,
+    "depth": 3,
+    "thumbnail_url": "/uploads/BREAKER_TRIFASICO_70-100A_.440V_.25KA._3VM1110-3EE32-0AA0_COD__S29100.jpg",
+    "objects": [
+      {
+        "id": "id_aspf8q81a",
+        "label": "BREACKER",
+        "xmin": 107,
+        "ymin": 13,
+        "xmax": 496,
+        "ymax": 591
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.432998",
+    "updated_at": "2026-03-12T16:40:22.404026"
+  },
+  {
+    "filename": "D_NQ_NP_889464-MLU74383712337_022024-O.webp",
+    "width": 391,
+    "height": 500,
+    "depth": 3,
+    "thumbnail_url": "/uploads/D_NQ_NP_889464-MLU74383712337_022024-O.webp",
+    "objects": [
+      {
+        "id": "id_sg7ymfz59",
+        "label": "BREACKER",
+        "xmin": 16,
+        "ymin": 13,
+        "xmax": 378,
+        "ymax": 481
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.437478",
+    "updated_at": "2026-03-12T16:40:43.393307"
+  },
+  {
+    "filename": "p0098-p0102-p0107-p0113-p0117-p0120-p0125-mini.jpg",
+    "width": 800,
+    "height": 800,
+    "depth": 3,
+    "thumbnail_url": "/uploads/p0098-p0102-p0107-p0113-p0117-p0120-p0125-mini.jpg",
+    "objects": [
+      {
+        "id": "id_t3md83tjr",
+        "label": "BREACKER",
+        "xmin": 229,
+        "ymin": 17,
+        "xmax": 569,
+        "ymax": 781
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.439653",
+    "updated_at": "2026-03-12T16:40:56.871214"
+  },
+  {
+    "filename": "p0413-p0414-p0415-p0416-p0417-p0418-p0419-mini.jpg",
+    "width": 800,
+    "height": 800,
+    "depth": 3,
+    "thumbnail_url": "/uploads/p0413-p0414-p0415-p0416-p0417-p0418-p0419-mini.jpg",
+    "objects": [
+      {
+        "id": "id_7h2vzodcf",
+        "label": "BREACKER",
+        "xmin": 127,
+        "ymin": 17,
+        "xmax": 671,
+        "ymax": 781
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.441174",
+    "updated_at": "2026-03-12T16:41:04.799771"
+  },
+  {
+    "filename": "p7245-p7247-p7256.jpeg",
+    "width": 369,
+    "height": 369,
+    "depth": 3,
+    "thumbnail_url": "/uploads/p7245-p7247-p7256.jpeg",
+    "objects": [
+      {
+        "id": "id_alje9dqfd",
+        "label": "BREACKER",
+        "xmin": 89,
+        "ymin": 2,
+        "xmax": 282,
+        "ymax": 368
+      }
+    ],
+    "created_at": "2026-03-12T16:37:45.443578",
+    "updated_at": "2026-03-12T16:41:15.055258"
+  },
+  {
+    "filename": "images_1.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_1.jpg",
+    "objects": [
+      {
+        "id": "id_7b78zdf8c",
+        "label": "TORNILLOS",
+        "xmin": 19,
+        "ymin": 36,
+        "xmax": 208,
+        "ymax": 181
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.936665",
+    "updated_at": "2026-03-12T16:46:08.746063"
+  },
+  {
+    "filename": "images_2.jpg",
+    "width": 194,
+    "height": 259,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_2.jpg",
+    "objects": [
+      {
+        "id": "id_24cdbkgn5",
+        "label": "TORNILLOS",
+        "xmin": 39,
+        "ymin": 71,
+        "xmax": 162,
+        "ymax": 187
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.942309",
+    "updated_at": "2026-03-12T16:46:16.478254"
+  },
+  {
+    "filename": "images_3.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_3.jpg",
+    "objects": [
+      {
+        "id": "id_xl2twipmq",
+        "label": "TORNILLOS",
+        "xmin": 49,
+        "ymin": 34,
+        "xmax": 175,
+        "ymax": 181
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.949266",
+    "updated_at": "2026-03-12T16:46:22.838627"
+  },
+  {
+    "filename": "images_4.jpg",
+    "width": 275,
+    "height": 183,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_4.jpg",
+    "objects": [
+      {
+        "id": "id_w85hyhsh9",
+        "label": "TORNILLOS",
+        "xmin": 35,
+        "ymin": 6,
+        "xmax": 249,
+        "ymax": 177
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.955507",
+    "updated_at": "2026-03-12T16:46:29.053099"
+  },
+  {
+    "filename": "images_5.jpg",
+    "width": 275,
+    "height": 183,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_5.jpg",
+    "objects": [
+      {
+        "id": "id_ahy7h35up",
+        "label": "TORNILLOS",
+        "xmin": 70,
+        "ymin": 13,
+        "xmax": 199,
+        "ymax": 157
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.960798",
+    "updated_at": "2026-03-12T16:46:38.980476"
+  },
+  {
+    "filename": "images_6.jpg",
+    "width": 260,
+    "height": 194,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_6.jpg",
+    "objects": [
+      {
+        "id": "id_hwdv3rd2g",
+        "label": "TORNILLOS",
+        "xmin": 60,
+        "ymin": 72,
+        "xmax": 243,
+        "ymax": 124
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.966882",
+    "updated_at": "2026-03-12T16:46:46.885830"
+  },
+  {
+    "filename": "images_7.jpg",
+    "width": 268,
+    "height": 188,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_7.jpg",
+    "objects": [
+      {
+        "id": "id_zwz7ih5fq",
+        "label": "TORNILLOS",
+        "xmin": 67,
+        "ymin": 12,
+        "xmax": 205,
+        "ymax": 166
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.974070",
+    "updated_at": "2026-03-12T16:46:58.639660"
+  },
+  {
+    "filename": "images_8.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_8.jpg",
+    "objects": [
+      {
+        "id": "id_zv05gdnmm",
+        "label": "TORNILLOS",
+        "xmin": 28,
+        "ymin": 18,
+        "xmax": 201,
+        "ymax": 207
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.977073",
+    "updated_at": "2026-03-12T16:47:05.170627"
+  },
+  {
+    "filename": "images_9.jpg",
+    "width": 260,
+    "height": 194,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_9.jpg",
+    "objects": [
+      {
+        "id": "id_z5xp35r40",
+        "label": "TORNILLOS",
+        "xmin": 21,
+        "ymin": 43,
+        "xmax": 241,
+        "ymax": 148
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.978103",
+    "updated_at": "2026-03-12T16:47:13.548973"
+  },
+  {
+    "filename": "images.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images.jpg",
+    "objects": [
+      {
+        "id": "id_t265j45ob",
+        "label": "TORNILLOS",
+        "xmin": 12,
+        "ymin": 65,
+        "xmax": 217,
+        "ymax": 168
+      }
+    ],
+    "created_at": "2026-03-12T16:45:13.978103",
+    "updated_at": "2026-03-12T16:47:23.701091"
+  },
+  {
+    "filename": "celular-67-iphone-15-pro-max-chip-a17-pro256gbazul-titaniumios-600x600.jpg",
+    "width": 600,
+    "height": 600,
+    "depth": 3,
+    "thumbnail_url": "/uploads/celular-67-iphone-15-pro-max-chip-a17-pro256gbazul-titaniumios-600x600.jpg",
+    "objects": [
+      {
+        "id": "id_9w4btj18u",
+        "label": "IPHONE",
+        "xmin": 123,
+        "ymin": 62,
+        "xmax": 483,
+        "ymax": 509
+      },
+      {
+        "id": "id_3fr3e91u3",
+        "label": "IPHONE",
+        "xmin": 263,
+        "ymin": 63,
+        "xmax": 478,
+        "ymax": 504
+      },
+      {
+        "id": "id_fdqiom3rl",
+        "label": "IPHONE",
+        "xmin": 125,
+        "ymin": 64,
+        "xmax": 270,
+        "ymax": 505
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.260533",
+    "updated_at": "2026-03-12T16:57:17.362040"
+  },
+  {
+    "filename": "images_10.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_10.jpg",
+    "objects": [
+      {
+        "id": "id_qauj7uqtb",
+        "label": "IPHONE",
+        "xmin": 24,
+        "ymin": 0,
+        "xmax": 204,
+        "ymax": 225
+      },
+      {
+        "id": "id_by565yjl2",
+        "label": "IPHONE",
+        "xmin": 118,
+        "ymin": 1,
+        "xmax": 208,
+        "ymax": 222
+      },
+      {
+        "id": "id_d0wpwpbss",
+        "label": "IPHONE",
+        "xmin": 23,
+        "ymin": 0,
+        "xmax": 130,
+        "ymax": 225
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.260533",
+    "updated_at": "2026-03-12T16:57:02.655769"
+  },
+  {
+    "filename": "images_11.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_11.jpg",
+    "objects": [
+      {
+        "id": "id_joo2kltos",
+        "label": "IPHONE",
+        "xmin": 53,
+        "ymin": 41,
+        "xmax": 172,
+        "ymax": 198
+      },
+      {
+        "id": "id_joajln1gr",
+        "label": "IPHONE",
+        "xmin": 95,
+        "ymin": 46,
+        "xmax": 169,
+        "ymax": 194
+      },
+      {
+        "id": "id_o7r0muliv",
+        "label": "IPHONE",
+        "xmin": 55,
+        "ymin": 40,
+        "xmax": 101,
+        "ymax": 198
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.276681",
+    "updated_at": "2026-03-12T16:57:32.912051"
+  },
+  {
+    "filename": "images_12.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_12.jpg",
+    "objects": [
+      {
+        "id": "id_bcmsnr12w",
+        "label": "IPHONE",
+        "xmin": 28,
+        "ymin": 9,
+        "xmax": 197,
+        "ymax": 215
+      },
+      {
+        "id": "id_sdjn7gsu7",
+        "label": "IPHONE",
+        "xmin": 95,
+        "ymin": 6,
+        "xmax": 193,
+        "ymax": 216
+      },
+      {
+        "id": "id_8xxbcmvus",
+        "label": "IPHONE",
+        "xmin": 30,
+        "ymin": 2,
+        "xmax": 96,
+        "ymax": 210
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.276681",
+    "updated_at": "2026-03-12T16:57:47.573697"
+  },
+  {
+    "filename": "images_13.jpg",
+    "width": 190,
+    "height": 266,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_13.jpg",
+    "objects": [
+      {
+        "id": "id_s2e1w6hsf",
+        "label": "IPHONE",
+        "xmin": 29,
+        "ymin": 10,
+        "xmax": 162,
+        "ymax": 255
+      },
+      {
+        "id": "id_ut6w1o0p3",
+        "label": "IPHONE",
+        "xmin": 81,
+        "ymin": 38,
+        "xmax": 163,
+        "ymax": 253
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.276681",
+    "updated_at": "2026-03-12T16:57:58.376299"
+  },
+  {
+    "filename": "images_14.jpg",
+    "width": 225,
+    "height": 225,
+    "depth": 3,
+    "thumbnail_url": "/uploads/images_14.jpg",
+    "objects": [
+      {
+        "id": "id_p9ce5f918",
+        "label": "IPHONE",
+        "xmin": 46,
+        "ymin": 24,
+        "xmax": 180,
+        "ymax": 199
+      },
+      {
+        "id": "id_raz9j9bfp",
+        "label": "IPHONE",
+        "xmin": 91,
+        "ymin": 28,
+        "xmax": 175,
+        "ymax": 196
+      },
+      {
+        "id": "id_mus4nb6o4",
+        "label": "IPHONE",
+        "xmin": 49,
+        "ymin": 26,
+        "xmax": 96,
+        "ymax": 199
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.276681",
+    "updated_at": "2026-03-12T16:58:11.641802"
+  },
+  {
+    "filename": "iphone-16-blanco-doble-movistar_1_1.png",
+    "width": 700,
+    "height": 700,
+    "depth": 1,
+    "thumbnail_url": "/uploads/iphone-16-blanco-doble-movistar_1_1.png",
+    "objects": [
+      {
+        "id": "id_h5xwdd3dj",
+        "label": "IPHONE",
+        "xmin": 73,
+        "ymin": 7,
+        "xmax": 623,
+        "ymax": 689
+      },
+      {
+        "id": "id_m9r1wwsc0",
+        "label": "IPHONE",
+        "xmin": 297,
+        "ymin": 12,
+        "xmax": 622,
+        "ymax": 690
+      },
+      {
+        "id": "id_6jqqockjv",
+        "label": "IPHONE",
+        "xmin": 75,
+        "ymin": 11,
+        "xmax": 301,
+        "ymax": 690
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.276681",
+    "updated_at": "2026-03-12T16:58:29.130017"
+  },
+  {
+    "filename": "iphone-17-128gb-negro-doble-movistar.png",
+    "width": 700,
+    "height": 700,
+    "depth": 1,
+    "thumbnail_url": "/uploads/iphone-17-128gb-negro-doble-movistar.png",
+    "objects": [
+      {
+        "id": "id_4x5uhee4z",
+        "label": "IPHONE",
+        "xmin": 61,
+        "ymin": 7,
+        "xmax": 635,
+        "ymax": 689
+      },
+      {
+        "id": "id_n04lp66lm",
+        "label": "IPHONE",
+        "xmin": 317,
+        "ymin": 13,
+        "xmax": 631,
+        "ymax": 688
+      },
+      {
+        "id": "id_oq8k2wqlj",
+        "label": "IPHONE",
+        "xmin": 66,
+        "ymin": 6,
+        "xmax": 316,
+        "ymax": 689
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.292768",
+    "updated_at": "2026-03-12T16:58:48.721521"
+  },
+  {
+    "filename": "iphone-17-air-negro-doble-movistar.png",
+    "width": 700,
+    "height": 700,
+    "depth": 1,
+    "thumbnail_url": "/uploads/iphone-17-air-negro-doble-movistar.png",
+    "objects": [
+      {
+        "id": "id_xz7250pb8",
+        "label": "IPHONE",
+        "xmin": 53,
+        "ymin": 7,
+        "xmax": 643,
+        "ymax": 694
+      },
+      {
+        "id": "id_ykskx0m8p",
+        "label": "IPHONE",
+        "xmin": 321,
+        "ymin": 13,
+        "xmax": 641,
+        "ymax": 696
+      },
+      {
+        "id": "id_4xjai9evv",
+        "label": "IPHONE",
+        "xmin": 55,
+        "ymin": 4,
+        "xmax": 322,
+        "ymax": 694
+      }
+    ],
+    "created_at": "2026-03-12T16:54:06.294818",
+    "updated_at": "2026-03-12T16:59:07.276412"
+  },
+  {
+    "filename": "apple-celulares-celular-iphone-17-pro-256gb-lla3256-deep-blue-esim-1-1-1758810969.jpg",
+    "width": 600,
+    "height": 600,
+    "depth": 3,
+    "thumbnail_url": "/uploads/apple-celulares-celular-iphone-17-pro-256gb-lla3256-deep-blue-esim-1-1-1758810969.jpg",
+    "objects": [
+      {
+        "id": "id_vierzrcec",
+        "label": "IPHONE",
+        "xmin": 133,
+        "ymin": 64,
+        "xmax": 369,
+        "ymax": 534
+      }
+    ],
+    "created_at": "2026-03-12T16:55:04.438672",
+    "updated_at": "2026-03-12T16:59:15.249251"
+  }
+]

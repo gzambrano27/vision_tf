@@ -1,0 +1,17 @@
+{
+  "filename": "p0413-p0414-p0415-p0416-p0417-p0418-p0419-mini.jpg",
+  "width": 800,
+  "height": 800,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_7h2vzodcf",
+      "label": "BREACKER",
+      "xmin": 127,
+      "ymin": 17,
+      "xmax": 671,
+      "ymax": 781
+    }
+  ],
+  "updated_at": "2026-03-12T16:41:04.801781"
+}

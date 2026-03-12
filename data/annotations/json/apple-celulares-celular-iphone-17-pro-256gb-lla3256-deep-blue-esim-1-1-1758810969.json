@@ -1,0 +1,17 @@
+{
+  "filename": "apple-celulares-celular-iphone-17-pro-256gb-lla3256-deep-blue-esim-1-1-1758810969.jpg",
+  "width": 600,
+  "height": 600,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_vierzrcec",
+      "label": "IPHONE",
+      "xmin": 133,
+      "ymin": 64,
+      "xmax": 369,
+      "ymax": 534
+    }
+  ],
+  "updated_at": "2026-03-12T16:59:15.252251"
+}

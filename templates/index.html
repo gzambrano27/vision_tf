@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vision Trainer Studio TF</title>
+  <style>
+    :root {
+      --bg: #07101b;
+      --bg-soft: #0d1726;
+      --panel: rgba(15, 23, 42, 0.92);
+      --panel-2: rgba(17, 24, 39, 0.96);
+      --line: rgba(77, 99, 130, 0.45);
+      --text: #e5eefc;
+      --muted: #9bb0cb;
+      --green: #25d366;
+      --blue: #56b8ff;
+      --orange: #ffb648;
+      --red: #ff6b6b;
+      --purple: #8b7dff;
+      --shadow: 0 18px 40px rgba(0,0,0,.25);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(86,184,255,.13), transparent 28%),
+        radial-gradient(circle at top right, rgba(139,125,255,.12), transparent 28%),
+        linear-gradient(180deg, #07101b 0%, #0b1423 100%);
+    }
+    .layout { display: grid; grid-template-columns: 390px 1fr; min-height: 100vh; }
+    .sidebar {
+      padding: 22px;
+      background: rgba(9, 15, 25, 0.86);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      overflow-y: auto;
+    }
+    .content { padding: 22px; }
+    h1,h2,h3 { margin: 0 0 10px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 17px; }
+    p, label, small { color: var(--muted); }
+    .hero {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(22,31,55,.95), rgba(14,22,36,.98));
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+    .hero .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(86,184,255,.12);
+      border: 1px solid rgba(86,184,255,.25);
+      color: #bde3ff;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(17,24,39,.96), rgba(10,16,28,.98));
+      min-height: 90px;
+    }
+    .metric strong { display: block; margin-bottom: 6px; font-size: 14px; color: #d5e4fb; }
+    input, select {
+      width: 100%;
+      background: rgba(6,11,20,.9);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: rgba(86,184,255,.65);
+      box-shadow: 0 0 0 4px rgba(86,184,255,.12);
+    }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    button, .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #06111d;
+      background: linear-gradient(180deg, #27d46a, #1fb154);
+      box-shadow: 0 10px 24px rgba(37,211,102,.18);
+    }
+    .btn.secondary { background: linear-gradient(180deg, #202e45, #162235); color: var(--text); box-shadow: none; }
+    .btn.info { background: linear-gradient(180deg, #65c7ff, #3baeff); color: #06223a; box-shadow: 0 10px 24px rgba(86,184,255,.18); }
+    .btn.warning { background: linear-gradient(180deg, #ffc85d, #f2a824); color: #382200; box-shadow: 0 10px 24px rgba(255,182,72,.16); }
+    .btn.danger { background: linear-gradient(180deg, #ff7f7f, #f45d5d); color: #2d0808; box-shadow: none; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(86,184,255,.25);
+      background: rgba(86,184,255,.09);
+      color: #cde9ff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .chip.active {
+      background: linear-gradient(180deg, rgba(37,211,102,.22), rgba(37,211,102,.10));
+      border-color: rgba(37,211,102,.42);
+      color: #dffdea;
+    }
+    .dataset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 12px;
+      max-height: 44vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .image-tile {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(5,10,18,.92);
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease;
+    }
+    .image-tile:hover { transform: translateY(-2px); }
+    .image-tile.active { border-color: rgba(37,211,102,.6); }
+    .image-thumb { aspect-ratio: 1 / 1; background: #020617; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .image-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .image-meta { padding: 10px; }
+    .image-meta strong { font-size: 12px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .canvas-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 16px;
+      align-items: start;
+    }
+    .canvas-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #020617;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+      max-height: 70vh;
+    }
+    #imageCanvas { display: block; max-width: 100%; cursor: crosshair; }
+    .object-panel { border: 1px solid var(--line); border-radius: 18px; padding: 12px; background: rgba(6,11,20,.78); }
+    .object-row, .detect-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(10,16,28,.95);
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .status {
+      min-height: 88px;
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(8,13,24,.88);
+      line-height: 1.45;
+    }
+    .progress { margin-top: 12px; height: 14px; border-radius: 999px; background: rgba(8,13,24,.88); border: 1px solid var(--line); overflow: hidden; }
+    .progress > div { height: 100%; width: 0%; background: linear-gradient(90deg, var(--green), var(--blue), var(--purple)); transition: width .25s ease; }
+    .preview { width: 100%; border-radius: 18px; border: 1px solid var(--line); margin-top: 12px; }
+    .hint {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(139,125,255,.12);
+      border: 1px solid rgba(139,125,255,.24);
+      color: #d9d6ff;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .toolbar-inline { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    @media (max-width: 1220px) {
+      .layout { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .canvas-stage { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .metrics { grid-template-columns: 1fr; }
+      .sidebar, .content { padding: 14px; }
+      .row, .toolbar-inline { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="hero">
+        <div class="tag">TensorFlow • Detección multiobjeto • XML + JSON</div>
+        <h1>Vision Trainer Studio TF</h1>
+        <p>Sube imágenes, anota varios objetos por imagen, entrena un detector TensorFlow con backbone preentrenado y prueba inferencias desde la misma interfaz.</p>
+      </div>
+
+      <div class="card">
+        <h2>1. Cargar imágenes</h2>
+        <input type="file" id="fileInput" accept="image/*" multiple />
+        <button id="uploadBtn">Subir imágenes</button>
+      </div>
+
+      <div class="card">
+        <h2>2. Clases</h2>
+        <div class="row">
+          <input type="text" id="classInput" placeholder="Ej: carro, gato, casco" style="margin:0;" />
+          <button id="addClassBtn" class="btn info">Agregar</button>
+        </div>
+        <div class="chips" id="classList"></div>
+      </div>
+
+      <div class="card">
+        <h2>3. Dataset</h2>
+        <div class="dataset-grid" id="imageList"></div>
+      </div>
+
+      <div class="card">
+        <h2>4. Entrenamiento TensorFlow</h2>
+        <label>Backbone</label>
+        <select id="backboneSelect">
+          <option value="MobileNetV2">MobileNetV2</option>
+          <option value="EfficientNetB0">EfficientNetB0</option>
+        </select>
+        <label>Épocas</label>
+        <input type="number" id="epochsInput" value="30" min="1" />
+        <label>Tamaño imagen</label>
+        <input type="number" id="imgszInput" value="416" min="224" step="32" />
+        <label>Batch</label>
+        <input type="number" id="batchInput" value="8" min="1" />
+        <label>Tamaño grilla</label>
+        <input type="number" id="gridInput" value="10" min="4" max="20" />
+        <label>Validación</label>
+        <input type="number" id="valInput" value="0.2" min="0.1" max="0.4" step="0.05" />
+        <div class="row">
+          <button id="exportBtn" class="btn secondary">Exportar dataset</button>
+          <button id="trainBtn" class="btn info">Entrenar</button>
+        </div>
+        <button id="downloadModelBtn" class="btn warning" style="width:100%; margin-top:10px;">Descargar modelo .keras</button>
+      </div>
+
+      <div class="hint">
+        Consejos: usa mínimo 30–50 imágenes por clase, variedad de ángulos y cajas ajustadas. Puedes marcar muchos objetos en la misma imagen; solo evita superponer demasiados centros dentro de la misma celda de la grilla.
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="metrics">
+        <div class="metric"><strong>Imagen actual</strong><span id="currentImageName">Ninguna</span></div>
+        <div class="metric"><strong>Resolución</strong><span id="currentResolution">-</span></div>
+        <div class="metric"><strong>Objetos anotados</strong><span id="objectCount">0</span></div>
+        <div class="metric"><strong>Estado entrenamiento</strong><span id="trainState">idle</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Anotación visual</h2>
+        <div class="toolbar-inline" style="margin-bottom:12px;">
+          <input type="text" id="labelInput" placeholder="Etiqueta activa" style="max-width:260px; margin:0;" />
+          <button id="saveBtn">Guardar anotación</button>
+          <button id="clearBtn" class="btn secondary">Limpiar cajas</button>
+          <button id="undoBtn" class="btn secondary">Deshacer última</button>
+        </div>
+        <div class="canvas-stage">
+          <div class="canvas-wrap">
+            <canvas id="imageCanvas"></canvas>
+          </div>
+          <div class="object-panel">
+            <h3 style="margin-bottom:10px;">Objetos en la imagen</h3>
+            <div id="objectList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Estado</h2>
+        <div class="status" id="statusBox">Listo.</div>
+        <div class="progress"><div id="progressBar"></div></div>
+      </div>
+
+      <div class="card">
+        <h2>Inferencia</h2>
+        <div class="row">
+          <input type="file" id="predictInput" accept="image/*" style="max-width:340px; margin:0;" />
+          <input type="number" id="confInput" value="0.25" min="0.01" max="1" step="0.01" style="max-width:120px; margin:0;" />
+          <button id="predictBtn" class="btn info">Probar detección</button>
+        </div>
+        <div id="predictionList" style="margin-top:12px;"></div>
+        <img id="predictionPreview" class="preview" style="display:none;" />
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const imageListEl = document.getElementById('imageList');
+    const classListEl = document.getElementById('classList');
+    const statusBox = document.getElementById('statusBox');
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    const labelInput = document.getElementById('labelInput');
+    const objectList = document.getElementById('objectList');
+    const currentImageName = document.getElementById('currentImageName');
+    const currentResolution = document.getElementById('currentResolution');
+    const objectCount = document.getElementById('objectCount');
+    const trainState = document.getElementById('trainState');
+    const progressBar = document.getElementById('progressBar');
+    const predictionList = document.getElementById('predictionList');
+    const predictionPreview = document.getElementById('predictionPreview');
+
+    let dataset = [];
+    let classes = [];
+    let currentImage = null;
+    let imgObj = null;
+    let boxes = [];
+    let isDrawing = false;
+    let startX = 0, startY = 0, tempX = 0, tempY = 0;
+    let pollTimer = null;
+    let activeClass = null;
+
+    const randomId = () => 'id_' + Math.random().toString(36).slice(2, 11);
+    const setStatus = (msg) => { statusBox.textContent = msg; };
+
+    async function fetchClasses() {
+      const res = await fetch('/api/classes');
+      const data = await res.json();
+      classes = data.classes || [];
+      if (classes.length && !activeClass) {
+        activeClass = classes[0];
+        labelInput.value = activeClass;
+      }
+      renderClasses();
+    }
+
+    function renderClasses() {
+      classListEl.innerHTML = '';
+      classes.forEach((cls, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'chip' + (activeClass === cls ? ' active' : '');
+        wrap.textContent = cls;
+        wrap.onclick = () => {
+          activeClass = cls;
+          labelInput.value = cls;
+          renderClasses();
+        };
+        wrap.oncontextmenu = async (e) => {
+          e.preventDefault();
+          if (!confirm(`¿Eliminar la clase ${cls}?`)) return;
+          classes.splice(idx, 1);
+          if (activeClass === cls) activeClass = classes[0] || null;
+          labelInput.value = activeClass || '';
+          await saveClasses();
+        };
+        classListEl.appendChild(wrap);
+      });
+    }
+
+    async function saveClasses() {
+      const res = await fetch('/api/classes', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({classes})
+      });
+      const data = await res.json();
+      classes = data.classes || [];
+      if (classes.length && !classes.includes(activeClass)) {
+        activeClass = classes[0];
+        labelInput.value = activeClass;
+      }
+      renderClasses();
+      setStatus('Clases actualizadas. Clic izquierdo = seleccionar. Clic derecho = eliminar.');
+    }
+
+    async function fetchImages() {
+      const res = await fetch('/api/images');
+      dataset = await res.json();
+      renderImageList();
+      if (!currentImage && dataset.length) openImage(dataset[0].filename);
+    }
+
+    function renderImageList() {
+      imageListEl.innerHTML = '';
+      dataset.forEach(item => {
+        const tile = document.createElement('div');
+        tile.className = 'image-tile' + (currentImage && currentImage.filename === item.filename ? ' active' : '');
+        tile.innerHTML = `
+          <div class="image-thumb"><img src="${item.thumbnail_url || ('/uploads/' + item.filename)}" alt="${item.filename}" /></div>
+          <div class="image-meta">
+            <strong>${item.filename}</strong>
+            <small>${item.objects?.length || 0} objetos</small>
+          </div>`;
+        tile.onclick = () => openImage(item.filename);
+        imageListEl.appendChild(tile);
+      });
+    }
+
+    async function openImage(filename) {
+      const res = await fetch(`/api/annotation/${filename}`);
+      const data = await res.json();
+      currentImage = data.image;
+      boxes = [...(currentImage.objects || [])];
+      currentImageName.textContent = currentImage.filename;
+      currentResolution.textContent = `${currentImage.width} x ${currentImage.height}`;
+      objectCount.textContent = boxes.length;
+      renderImageList();
+      renderObjects();
+      loadCanvasImage(filename);
+      setStatus(`Imagen cargada: ${filename}`);
+    }
+
+    function loadCanvasImage(filename) {
+      imgObj = new Image();
+      imgObj.onload = function() {
+        canvas.width = imgObj.width;
+        canvas.height = imgObj.height;
+        draw();
+      };
+      imgObj.src = `/uploads/${filename}`;
+    }
+
+    function draw() {
+      if (!imgObj) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(imgObj, 0, 0);
+      boxes.forEach((b, index) => {
+        ctx.strokeStyle = '#25d366';
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(b.xmin, b.ymin, b.xmax - b.xmin, b.ymax - b.ymin);
+        ctx.fillStyle = 'rgba(37,211,102,0.13)';
+        ctx.fillRect(b.xmin, b.ymin, b.xmax - b.xmin, b.ymax - b.ymin);
+        ctx.fillStyle = '#dffdea';
+        ctx.font = '15px Segoe UI';
+        const tag = `${index + 1}. ${b.label}`;
+        const textWidth = ctx.measureText(tag).width + 14;
+        const textY = Math.max(22, b.ymin - 8);
+        ctx.fillStyle = 'rgba(5,10,18,.82)';
+        ctx.fillRect(b.xmin, textY - 18, textWidth, 20);
+        ctx.fillStyle = '#25d366';
+        ctx.fillText(tag, b.xmin + 7, textY - 3);
+      });
+      if (isDrawing) {
+        const x = Math.min(startX, tempX);
+        const y = Math.min(startY, tempY);
+        const w = Math.abs(tempX - startX);
+        const h = Math.abs(tempY - startY);
+        ctx.strokeStyle = '#56b8ff';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.strokeRect(x, y, w, h);
+        ctx.setLineDash([]);
+      }
+    }
+
+    function getCanvasCoords(evt) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return {
+        x: Math.round((evt.clientX - rect.left) * scaleX),
+        y: Math.round((evt.clientY - rect.top) * scaleY)
+      };
+    }
+
+    function getActiveLabel() {
+      const label = labelInput.value.trim();
+      if (label) activeClass = label;
+      return label;
+    }
+
+    canvas.addEventListener('mousedown', (evt) => {
+      if (!currentImage) return;
+      const label = getActiveLabel();
+      if (!label) return setStatus('Primero selecciona o escribe una etiqueta.');
+      if (classes.length && !classes.includes(label)) return setStatus('La etiqueta no existe en la lista de clases.');
+      const p = getCanvasCoords(evt);
+      isDrawing = true;
+      startX = tempX = p.x;
+      startY = tempY = p.y;
+      draw();
+    });
+
+    canvas.addEventListener('mousemove', (evt) => {
+      if (!isDrawing) return;
+      const p = getCanvasCoords(evt);
+      tempX = p.x;
+      tempY = p.y;
+      draw();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDrawing) return;
+      isDrawing = false;
+      const label = getActiveLabel();
+      const xmin = Math.min(startX, tempX);
+      const ymin = Math.min(startY, tempY);
+      const xmax = Math.max(startX, tempX);
+      const ymax = Math.max(startY, tempY);
+      if (Math.abs(xmax - xmin) < 5 || Math.abs(ymax - ymin) < 5) {
+        setStatus('La caja es muy pequeña.');
+        draw();
+        return;
+      }
+      boxes.push({ id: randomId(), label, xmin, ymin, xmax, ymax });
+      renderObjects();
+      draw();
+      objectCount.textContent = boxes.length;
+      setStatus(`Caja agregada: ${label}. Ya puedes seguir marcando más objetos en esta misma imagen.`);
+    });
+
+    function renderObjects() {
+      objectList.innerHTML = '';
+      if (!boxes.length) {
+        objectList.innerHTML = '<small>No hay cajas todavía.</small>';
+        return;
+      }
+      boxes.forEach((b, idx) => {
+        const row = document.createElement('div');
+        row.className = 'object-row';
+        row.innerHTML = `<div><strong>${b.label}</strong><br><small>[${b.xmin}, ${b.ymin}] → [${b.xmax}, ${b.ymax}]</small></div>`;
+        const actions = document.createElement('div');
+        actions.className = 'row';
+        const useBtn = document.createElement('button');
+        useBtn.className = 'btn secondary';
+        useBtn.textContent = 'Usar';
+        useBtn.onclick = () => { activeClass = b.label; labelInput.value = b.label; renderClasses(); };
+        const del = document.createElement('button');
+        del.className = 'btn danger';
+        del.textContent = 'Eliminar';
+        del.onclick = () => {
+          boxes.splice(idx, 1);
+          renderObjects();
+          draw();
+          objectCount.textContent = boxes.length;
+        };
+        actions.appendChild(useBtn);
+        actions.appendChild(del);
+        row.appendChild(actions);
+        objectList.appendChild(row);
+      });
+    }
+
+    document.getElementById('addClassBtn').onclick = async () => {
+      const input = document.getElementById('classInput');
+      const cls = input.value.trim();
+      if (!cls) return;
+      if (!classes.includes(cls)) classes.push(cls);
+      activeClass = cls;
+      labelInput.value = cls;
+      input.value = '';
+      await saveClasses();
+    };
+
+    document.getElementById('uploadBtn').onclick = async () => {
+      const files = document.getElementById('fileInput').files;
+      if (!files.length) return setStatus('Selecciona al menos una imagen.');
+      const fd = new FormData();
+      for (const f of files) fd.append('images', f);
+      const res = await fetch('/api/upload', {method: 'POST', body: fd});
+      const data = await res.json();
+      setStatus(`Imágenes subidas: ${data.uploaded?.length || 0}`);
+      await fetchImages();
+    };
+
+    document.getElementById('saveBtn').onclick = async () => {
+      if (!currentImage) return setStatus('No hay imagen seleccionada.');
+      const res = await fetch(`/api/annotation/${currentImage.filename}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({objects: boxes})
+      });
+      const data = await res.json();
+      if (!data.ok) return setStatus(data.error || 'No se pudo guardar.');
+      classes = data.classes || classes;
+      renderClasses();
+      setStatus(`Guardado XML: ${data.xml_file}\nGuardado JSON: ${data.json_file}\nObjetos: ${data.objects.length}`);
+      await fetchImages();
+      await openImage(currentImage.filename);
+    };
+
+    document.getElementById('clearBtn').onclick = () => {
+      boxes = [];
+      renderObjects();
+      draw();
+      objectCount.textContent = 0;
+      setStatus('Cajas limpiadas en memoria. Pulsa Guardar anotación para persistir cambios.');
+    };
+
+    document.getElementById('undoBtn').onclick = () => {
+      if (!boxes.length) return;
+      boxes.pop();
+      renderObjects();
+      draw();
+      objectCount.textContent = boxes.length;
+      setStatus('Última caja eliminada.');
+    };
+
+    document.getElementById('exportBtn').onclick = async () => {
+      const res = await fetch('/api/export');
+      const data = await res.json();
+      setStatus(`Dataset exportado para TensorFlow.\nClases: ${(data.meta.classes || []).join(', ')}\nImágenes anotadas: ${data.meta.num_annotated_images}`);
+    };
+
+    document.getElementById('trainBtn').onclick = async () => {
+      const payload = {
+        backbone: document.getElementById('backboneSelect').value,
+        epochs: Number(document.getElementById('epochsInput').value),
+        imgsz: Number(document.getElementById('imgszInput').value),
+        batch: Number(document.getElementById('batchInput').value),
+        grid_size: Number(document.getElementById('gridInput').value),
+        val_ratio: Number(document.getElementById('valInput').value),
+      };
+      const res = await fetch('/api/train', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.ok) return setStatus(data.error || 'No se pudo iniciar el entrenamiento.');
+      setStatus('Entrenamiento TensorFlow iniciado.');
+      startPolling();
+    };
+
+    document.getElementById('downloadModelBtn').onclick = () => {
+      window.location.href = '/api/download/model';
+    };
+
+    document.getElementById('predictBtn').onclick = async () => {
+      const file = document.getElementById('predictInput').files[0];
+      if (!file) return setStatus('Selecciona una imagen para inferencia.');
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('conf', document.getElementById('confInput').value || '0.25');
+      const res = await fetch('/api/predict', {method: 'POST', body: fd});
+      const data = await res.json();
+      if (!data.ok) return setStatus(data.error || 'No se pudo correr la inferencia.');
+      predictionList.innerHTML = '';
+      (data.detections || []).forEach(det => {
+        const row = document.createElement('div');
+        row.className = 'detect-row';
+        row.innerHTML = `<div><strong>${det.label}</strong><br><small>Confianza: ${det.confidence} | [${det.xmin}, ${det.ymin}] → [${det.xmax}, ${det.ymax}]</small></div>`;
+        predictionList.appendChild(row);
+      });
+      predictionPreview.src = data.preview_url + `?t=${Date.now()}`;
+      predictionPreview.style.display = 'block';
+      setStatus(`Inferencia completada. Detecciones: ${(data.detections || []).length}`);
+    };
+
+    async function pollTrainingStatus() {
+      const res = await fetch('/api/train/status');
+      const data = await res.json();
+      trainState.textContent = data.status || 'idle';
+      progressBar.style.width = `${data.progress || 0}%`;
+      if (data.message) setStatus(data.message + (data.best_model ? `\nModelo: ${data.best_model}` : ''));
+      if (data.status === 'running') {
+        if (!pollTimer) startPolling();
+      } else if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    }
+
+    function startPolling() {
+      if (pollTimer) clearInterval(pollTimer);
+      pollTrainingStatus();
+      pollTimer = setInterval(pollTrainingStatus, 4000);
+    }
+
+    labelInput.addEventListener('change', () => {
+      activeClass = labelInput.value.trim() || null;
+      renderClasses();
+    });
+
+    fetchClasses();
+    fetchImages();
+    pollTrainingStatus();
+  </script>
+</body>
+</html>

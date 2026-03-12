@@ -1,0 +1,25 @@
+{
+  "filename": "images_13.jpg",
+  "width": 190,
+  "height": 266,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_s2e1w6hsf",
+      "label": "IPHONE",
+      "xmin": 29,
+      "ymin": 10,
+      "xmax": 162,
+      "ymax": 255
+    },
+    {
+      "id": "id_ut6w1o0p3",
+      "label": "IPHONE",
+      "xmin": 81,
+      "ymin": 38,
+      "xmax": 163,
+      "ymax": 253
+    }
+  ],
+  "updated_at": "2026-03-12T16:57:58.380296"
+}

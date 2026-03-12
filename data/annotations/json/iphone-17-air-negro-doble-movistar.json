@@ -1,0 +1,33 @@
+{
+  "filename": "iphone-17-air-negro-doble-movistar.png",
+  "width": 700,
+  "height": 700,
+  "depth": 1,
+  "objects": [
+    {
+      "id": "id_xz7250pb8",
+      "label": "IPHONE",
+      "xmin": 53,
+      "ymin": 7,
+      "xmax": 643,
+      "ymax": 694
+    },
+    {
+      "id": "id_ykskx0m8p",
+      "label": "IPHONE",
+      "xmin": 321,
+      "ymin": 13,
+      "xmax": 641,
+      "ymax": 696
+    },
+    {
+      "id": "id_4xjai9evv",
+      "label": "IPHONE",
+      "xmin": 55,
+      "ymin": 4,
+      "xmax": 322,
+      "ymax": 694
+    }
+  ],
+  "updated_at": "2026-03-12T16:59:07.280411"
+}

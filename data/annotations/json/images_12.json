@@ -1,0 +1,33 @@
+{
+  "filename": "images_12.jpg",
+  "width": 225,
+  "height": 225,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_bcmsnr12w",
+      "label": "IPHONE",
+      "xmin": 28,
+      "ymin": 9,
+      "xmax": 197,
+      "ymax": 215
+    },
+    {
+      "id": "id_sdjn7gsu7",
+      "label": "IPHONE",
+      "xmin": 95,
+      "ymin": 6,
+      "xmax": 193,
+      "ymax": 216
+    },
+    {
+      "id": "id_8xxbcmvus",
+      "label": "IPHONE",
+      "xmin": 30,
+      "ymin": 2,
+      "xmax": 96,
+      "ymax": 210
+    }
+  ],
+  "updated_at": "2026-03-12T16:57:47.576690"
+}

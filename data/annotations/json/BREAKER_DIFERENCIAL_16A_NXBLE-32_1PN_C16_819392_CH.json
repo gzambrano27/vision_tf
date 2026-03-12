@@ -1,0 +1,17 @@
+{
+  "filename": "BREAKER_DIFERENCIAL_16A_NXBLE-32_1PN_C16_819392_CH.png",
+  "width": 600,
+  "height": 600,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_v8h84e4c0",
+      "label": "BREACKER",
+      "xmin": 124,
+      "ymin": 26,
+      "xmax": 474,
+      "ymax": 574
+    }
+  ],
+  "updated_at": "2026-03-12T16:40:05.035256"
+}

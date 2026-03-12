@@ -1,0 +1,17 @@
+{
+  "filename": "BREAKER_TRIFASICO_70-100A_.440V_.25KA._3VM1110-3EE32-0AA0_COD__S29100.jpg",
+  "width": 600,
+  "height": 600,
+  "depth": 3,
+  "objects": [
+    {
+      "id": "id_aspf8q81a",
+      "label": "BREACKER",
+      "xmin": 107,
+      "ymin": 13,
+      "xmax": 496,
+      "ymax": 591
+    }
+  ],
+  "updated_at": "2026-03-12T16:40:22.407742"
+}

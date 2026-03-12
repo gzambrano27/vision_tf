@@ -1,0 +1,33 @@
+{
+  "filename": "iphone-17-128gb-negro-doble-movistar.png",
+  "width": 700,
+  "height": 700,
+  "depth": 1,
+  "objects": [
+    {
+      "id": "id_4x5uhee4z",
+      "label": "IPHONE",
+      "xmin": 61,
+      "ymin": 7,
+      "xmax": 635,
+      "ymax": 689
+    },
+    {
+      "id": "id_n04lp66lm",
+      "label": "IPHONE",
+      "xmin": 317,
+      "ymin": 13,
+      "xmax": 631,
+      "ymax": 688
+    },
+    {
+      "id": "id_oq8k2wqlj",
+      "label": "IPHONE",
+      "xmin": 66,
+      "ymin": 6,
+      "xmax": 316,
+      "ymax": 689
+    }
+  ],
+  "updated_at": "2026-03-12T16:58:48.726083"
+}

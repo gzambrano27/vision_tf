@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<annotation><folder>uploads</folder><filename>images.jpg</filename><path>C:\Users\gzambrano\OneDrive - gpsgroup.com.ec\Documentos\python\vision_tf\data\uploads\images.jpg</path><source><database>Vision Trainer Studio TF</database></source><size><width>225</width><height>225</height><depth>3</depth></size><segmented>0</segmented><object><name>TORNILLOS</name><pose>Unspecified</pose><truncated>0</truncated><difficult>0</difficult><bndbox><xmin>12</xmin><ymin>65</ymin><xmax>217</xmax><ymax>168</ymax></bndbox></object></annotation>

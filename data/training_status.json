@@ -1,0 +1,14 @@
+{
+  "status": "error",
+  "message": "Error durante entrenamiento: Dimensions must be equal, but are 8 and 10 for '{{node compile_loss/loss_fn/mul_3}} = Mul[T=DT_FLOAT](compile_loss/loss_fn/Mean_1, compile_loss/loss_fn/strided_slice)' with input shapes: [8,10], [8,10,10].",
+  "updated_at": "2026-03-12T17:28:43.271437",
+  "progress": 0,
+  "config": {
+    "epochs": 30,
+    "imgsz": 416,
+    "batch": 8,
+    "grid_size": 10,
+    "backbone": "MobileNetV2",
+    "val_ratio": 0.2
+  }
+}
