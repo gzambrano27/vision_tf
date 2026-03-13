@@ -1,318 +1,341 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vision Trainer Studio TF</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    :root {
-      --bg: #07101b;
-      --bg-soft: #0d1726;
-      --panel: rgba(15, 23, 42, 0.92);
-      --panel-2: rgba(17, 24, 39, 0.96);
-      --line: rgba(77, 99, 130, 0.45);
-      --text: #e5eefc;
-      --muted: #9bb0cb;
-      --green: #25d366;
-      --blue: #56b8ff;
-      --orange: #ffb648;
-      --red: #ff6b6b;
-      --purple: #8b7dff;
-      --shadow: 0 18px 40px rgba(0,0,0,.25);
-      --radius: 20px;
+    /* Variables dinámicas para el Modo Claro / Oscuro */
+    :root { --transition-speed: 0.3s; }
+    [data-bs-theme="dark"] {
+      --app-bg: #0b1015; --nav-bg: #121820; --tile-bg: #212529; --canvas-bg: #000000;
+      --chip-bg: #343a40; --chip-border: #495057; --chip-hover: #495057; --chip-text: #f8f9fa;
+      --scroll-track: #212529; --scroll-thumb: #495057;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      color: var(--text);
-      font-family: Inter, Segoe UI, Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(86,184,255,.13), transparent 28%),
-        radial-gradient(circle at top right, rgba(139,125,255,.12), transparent 28%),
-        linear-gradient(180deg, #07101b 0%, #0b1423 100%);
+    [data-bs-theme="light"] {
+      --app-bg: #f4f6f9; --nav-bg: #ffffff; --tile-bg: #ffffff; --canvas-bg: #e9ecef;
+      --chip-bg: #e9ecef; --chip-border: #ced4da; --chip-hover: #dde2e6; --chip-text: #212529;
+      --scroll-track: #f8f9fa; --scroll-thumb: #ced4da;
     }
-    .layout { display: grid; grid-template-columns: 390px 1fr; min-height: 100vh; }
-    .sidebar {
-      padding: 22px;
-      background: rgba(9, 15, 25, 0.86);
-      border-right: 1px solid var(--line);
-      backdrop-filter: blur(14px);
-      overflow-y: auto;
-    }
-    .content { padding: 22px; }
-    h1,h2,h3 { margin: 0 0 10px; }
-    h1 { font-size: 28px; }
-    h2 { font-size: 17px; }
-    p, label, small { color: var(--muted); }
-    .hero {
-      padding: 20px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(22,31,55,.95), rgba(14,22,36,.98));
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
-    }
-    .hero .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(86,184,255,.12);
-      border: 1px solid rgba(86,184,255,.25);
-      color: #bde3ff;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: var(--shadow);
-    }
-    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
-    .metric {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(17,24,39,.96), rgba(10,16,28,.98));
-      min-height: 90px;
-    }
-    .metric strong { display: block; margin-bottom: 6px; font-size: 14px; color: #d5e4fb; }
-    input, select {
-      width: 100%;
-      background: rgba(6,11,20,.9);
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-      outline: none;
-    }
-    input:focus, select:focus {
-      border-color: rgba(86,184,255,.65);
-      box-shadow: 0 0 0 4px rgba(86,184,255,.12);
-    }
-    .row { display: flex; gap: 8px; flex-wrap: wrap; }
-    button, .btn {
-      border: 0;
-      border-radius: 14px;
-      padding: 11px 15px;
-      cursor: pointer;
-      font-weight: 700;
-      color: #06111d;
-      background: linear-gradient(180deg, #27d46a, #1fb154);
-      box-shadow: 0 10px 24px rgba(37,211,102,.18);
-    }
-    .btn.secondary { background: linear-gradient(180deg, #202e45, #162235); color: var(--text); box-shadow: none; }
-    .btn.info { background: linear-gradient(180deg, #65c7ff, #3baeff); color: #06223a; box-shadow: 0 10px 24px rgba(86,184,255,.18); }
-    .btn.warning { background: linear-gradient(180deg, #ffc85d, #f2a824); color: #382200; box-shadow: 0 10px 24px rgba(255,182,72,.16); }
-    .btn.danger { background: linear-gradient(180deg, #ff7f7f, #f45d5d); color: #2d0808; box-shadow: none; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip {
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(86,184,255,.25);
-      background: rgba(86,184,255,.09);
-      color: #cde9ff;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .chip.active {
-      background: linear-gradient(180deg, rgba(37,211,102,.22), rgba(37,211,102,.10));
-      border-color: rgba(37,211,102,.42);
-      color: #dffdea;
-    }
-    .dataset-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-      gap: 12px;
-      max-height: 44vh;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    .image-tile {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(5,10,18,.92);
-      cursor: pointer;
-      transition: transform .18s ease, border-color .18s ease;
-    }
-    .image-tile:hover { transform: translateY(-2px); }
-    .image-tile.active { border-color: rgba(37,211,102,.6); }
-    .image-thumb { aspect-ratio: 1 / 1; background: #020617; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+    body { background-color: var(--app-bg); transition: background-color var(--transition-speed); }
+    .navbar { background-color: var(--nav-bg) !important; border-bottom: 1px solid var(--bs-border-color); }
+    
+    /* Image Grid Styling */
+    .dataset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; max-height: 50vh; overflow-y: auto; }
+    .image-tile { border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: var(--tile-bg); cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .image-tile:hover { border-color: #0d6efd; transform: translateY(-2px); }
+    .image-tile.active { border-color: #198754; box-shadow: 0 0 10px rgba(25,135,84,0.4); }
+    .image-thumb { aspect-ratio: 1/1; background: var(--canvas-bg); overflow: hidden; }
     .image-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .image-meta { padding: 10px; }
-    .image-meta strong { font-size: 12px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .canvas-stage {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
-      gap: 16px;
-      align-items: start;
+    .image-meta { padding: 5px; font-size: 11px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bs-body-color); }
+    
+    /* Canvas Styling */
+    .canvas-wrap { overflow: auto; background: var(--canvas-bg); border: 1px solid var(--bs-border-color); border-radius: 8px; max-height: 65vh; display: flex; justify-content: center; }
+    #imageCanvas { cursor: crosshair; max-width: 100%; }
+    
+    /* Chips / Badges for Classes */
+    .chip { display: inline-block; padding: 0.45em 0.8em; font-size: 0.85em; font-weight: 600; border-radius: 50rem; cursor: pointer; margin: 2px; background-color: var(--chip-bg); border: 1px solid var(--chip-border); color: var(--chip-text); transition: 0.2s; }
+    .chip:hover { background-color: var(--chip-hover); }
+    .chip.active { background-color: #198754; border-color: #198754; color: #fff; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--scroll-track); }
+    ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6c757d; }
+    .nav-tabs .nav-link { font-weight: 600; color: var(--bs-secondary-color); cursor: pointer;}
+    .nav-tabs .nav-link.active { color: #198754; border-bottom-color: transparent; }
+
+    /* CORRECCIÓN CRÍTICA DE CSS PARA LA CÁMARA EN VIVO */
+    .video-wrapper { 
+        position: relative; 
+        display: inline-block; /* Hace que el contenedor abrace exactamente al video */
+        margin: 0 auto;
     }
-    .canvas-wrap {
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: #020617;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
-      max-height: 70vh;
+    #webcamVideo { 
+        display: block; 
+        max-width: 100%; 
+        border-radius: 8px; 
+        background: #000; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
     }
-    #imageCanvas { display: block; max-width: 100%; cursor: crosshair; }
-    .object-panel { border: 1px solid var(--line); border-radius: 18px; padding: 12px; background: rgba(6,11,20,.78); }
-    .object-row, .detect-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(10,16,28,.95);
-      margin-bottom: 8px;
-      align-items: center;
-    }
-    .status {
-      min-height: 88px;
-      white-space: pre-wrap;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(8,13,24,.88);
-      line-height: 1.45;
-    }
-    .progress { margin-top: 12px; height: 14px; border-radius: 999px; background: rgba(8,13,24,.88); border: 1px solid var(--line); overflow: hidden; }
-    .progress > div { height: 100%; width: 0%; background: linear-gradient(90deg, var(--green), var(--blue), var(--purple)); transition: width .25s ease; }
-    .preview { width: 100%; border-radius: 18px; border: 1px solid var(--line); margin-top: 12px; }
-    .hint {
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(139,125,255,.12);
-      border: 1px solid rgba(139,125,255,.24);
-      color: #d9d6ff;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .toolbar-inline { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    @media (max-width: 1220px) {
-      .layout { grid-template-columns: 1fr; }
-      .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .canvas-stage { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 720px) {
-      .metrics { grid-template-columns: 1fr; }
-      .sidebar, .content { padding: 14px; }
-      .row, .toolbar-inline { flex-direction: column; align-items: stretch; }
+    #webcamOverlay { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        pointer-events: none; /* Deja pasar los clics */
     }
   </style>
 </head>
 <body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="hero">
-        <div class="tag">TensorFlow • Detección multiobjeto • XML + JSON</div>
-        <h1>Vision Trainer Studio TF</h1>
-        <p>Sube imágenes, anota varios objetos por imagen, entrena un detector TensorFlow con backbone preentrenado y prueba inferencias desde la misma interfaz.</p>
-      </div>
 
-      <div class="card">
-        <h2>1. Cargar imágenes</h2>
-        <input type="file" id="fileInput" accept="image/*" multiple />
-        <button id="uploadBtn">Subir imágenes</button>
-      </div>
+  <nav class="navbar navbar-expand-lg py-3 mb-3">
+    <div class="container-fluid align-items-center">
+      <a class="navbar-brand fw-bold text-success m-0" href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bounding-box-circles me-2" viewBox="0 0 16 16">
+          <path d="M2 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM0 2a2 2 0 0 1 3.937-.5h8.126A2 2 0 1 1 14.5 3.937v8.126a2 2 0 1 1-2.437 1.563H3.937A2 2 0 1 1 1.5 12.063V3.937A2 2 0 0 1 0 2z"/>
+        </svg>
+        Vision Trainer Studio TF
+      </a>
+      <button class="btn btn-outline-secondary btn-sm d-flex align-items-center" id="themeToggle">
+        <svg id="themeIconDark" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>
+        <svg id="themeIconLight" width="16" height="16" fill="currentColor" class="bi bi-sun-fill d-none" viewBox="0 0 16 16"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/></svg>
+      </button>
+    </div>
+  </nav>
 
-      <div class="card">
-        <h2>2. Clases</h2>
+  <div class="container-fluid px-4 pb-5">
+    
+    <ul class="nav nav-tabs mb-4" id="appTabs" role="tablist">
+      <li class="nav-item" role="presentation"><button class="nav-link active" id="tab-annotate" data-bs-toggle="tab" data-bs-target="#pane-annotate" type="button" role="tab">1. Dataset y Anotación</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="tab-train" data-bs-toggle="tab" data-bs-target="#pane-train" type="button" role="tab">2. Entrenamiento</button></li>
+      <li class="nav-item" role="presentation"><button class="nav-link" id="tab-inference" data-bs-toggle="tab" data-bs-target="#pane-inference" type="button" role="tab">3. Inferencia (Webcam / Foto)</button></li>
+    </ul>
+
+    <div class="alert alert-secondary d-flex align-items-center mb-4 border-0 shadow-sm" role="alert">
+      <div class="spinner-grow spinner-grow-sm text-success me-3" role="status" id="trainSpinner" style="display:none;"></div>
+      <div class="font-monospace small text-body" id="statusBox">Listo. Inicializando entorno...</div>
+    </div>
+
+    <div class="tab-content" id="appTabsContent">
+      
+      <div class="tab-pane fade show active" id="pane-annotate" role="tabpanel">
         <div class="row">
-          <input type="text" id="classInput" placeholder="Ej: carro, gato, casco" style="margin:0;" />
-          <button id="addClassBtn" class="btn info">Agregar</button>
-        </div>
-        <div class="chips" id="classList"></div>
-      </div>
+          <div class="col-md-4 col-lg-3">
+            <div class="card shadow-sm mb-3">
+              <div class="card-header bg-body-tertiary fw-bold">Cargar Imágenes</div>
+              <div class="card-body">
+                <input class="form-control form-control-sm mb-2" type="file" id="fileInput" accept="image/*" multiple />
+                <button class="btn btn-outline-primary btn-sm w-100 fw-bold" id="uploadBtn">Subir seleccionadas</button>
+              </div>
+            </div>
 
-      <div class="card">
-        <h2>3. Dataset</h2>
-        <div class="dataset-grid" id="imageList"></div>
-      </div>
+            <div class="card shadow-sm mb-3">
+              <div class="card-header bg-body-tertiary fw-bold">Mis Clases</div>
+              <div class="card-body">
+                <div class="input-group input-group-sm mb-2">
+                  <input type="text" class="form-control" id="classInput" placeholder="Ej: casco, auto...">
+                  <button class="btn btn-success" id="addClassBtn" type="button">Añadir</button>
+                </div>
+                <div id="classList" class="mt-2"></div>
+                <div class="form-text mt-2"><small>(Clic derecho para eliminar clase)</small></div>
+              </div>
+            </div>
 
-      <div class="card">
-        <h2>4. Entrenamiento TensorFlow</h2>
-        <label>Backbone</label>
-        <select id="backboneSelect">
-          <option value="MobileNetV2">MobileNetV2</option>
-          <option value="EfficientNetB0">EfficientNetB0</option>
-        </select>
-        <label>Épocas</label>
-        <input type="number" id="epochsInput" value="30" min="1" />
-        <label>Tamaño imagen</label>
-        <input type="number" id="imgszInput" value="416" min="224" step="32" />
-        <label>Batch</label>
-        <input type="number" id="batchInput" value="8" min="1" />
-        <label>Tamaño grilla</label>
-        <input type="number" id="gridInput" value="10" min="4" max="20" />
-        <label>Validación</label>
-        <input type="number" id="valInput" value="0.2" min="0.1" max="0.4" step="0.05" />
-        <div class="row">
-          <button id="exportBtn" class="btn secondary">Exportar dataset</button>
-          <button id="trainBtn" class="btn info">Entrenar</button>
-        </div>
-        <button id="downloadModelBtn" class="btn warning" style="width:100%; margin-top:10px;">Descargar modelo .keras</button>
-      </div>
-
-      <div class="hint">
-        Consejos: usa mínimo 30–50 imágenes por clase, variedad de ángulos y cajas ajustadas. Puedes marcar muchos objetos en la misma imagen; solo evita superponer demasiados centros dentro de la misma celda de la grilla.
-      </div>
-    </aside>
-
-    <main class="content">
-      <div class="metrics">
-        <div class="metric"><strong>Imagen actual</strong><span id="currentImageName">Ninguna</span></div>
-        <div class="metric"><strong>Resolución</strong><span id="currentResolution">-</span></div>
-        <div class="metric"><strong>Objetos anotados</strong><span id="objectCount">0</span></div>
-        <div class="metric"><strong>Estado entrenamiento</strong><span id="trainState">idle</span></div>
-      </div>
-
-      <div class="card">
-        <h2>Anotación visual</h2>
-        <div class="toolbar-inline" style="margin-bottom:12px;">
-          <input type="text" id="labelInput" placeholder="Etiqueta activa" style="max-width:260px; margin:0;" />
-          <button id="saveBtn">Guardar anotación</button>
-          <button id="clearBtn" class="btn secondary">Limpiar cajas</button>
-          <button id="undoBtn" class="btn secondary">Deshacer última</button>
-        </div>
-        <div class="canvas-stage">
-          <div class="canvas-wrap">
-            <canvas id="imageCanvas"></canvas>
+            <div class="card shadow-sm mb-3">
+              <div class="card-header bg-body-tertiary fw-bold">Imágenes (<span id="totalImages">0</span>)</div>
+              <div class="card-body p-2">
+                <div class="dataset-grid" id="imageList"></div>
+              </div>
+            </div>
           </div>
-          <div class="object-panel">
-            <h3 style="margin-bottom:10px;">Objetos en la imagen</h3>
-            <div id="objectList"></div>
+
+          <div class="col-md-8 col-lg-9">
+            <div class="row mb-3 text-center g-2">
+              <div class="col-sm-4"><div class="card bg-body-tertiary shadow-sm"><div class="card-body py-2"><small class="text-body-secondary d-block">Archivo Actual</small><strong id="currentImageName" class="text-body">-</strong></div></div></div>
+              <div class="col-sm-4"><div class="card bg-body-tertiary shadow-sm"><div class="card-body py-2"><small class="text-body-secondary d-block">Resolución</small><strong id="currentResolution" class="text-body">-</strong></div></div></div>
+              <div class="col-sm-4"><div class="card bg-body-tertiary shadow-sm"><div class="card-body py-2"><small class="text-body-secondary d-block">Objetos Anotados</small><strong id="objectCount" class="text-success fs-5">0</strong></div></div></div>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+              <div class="card-body d-flex flex-wrap gap-2 align-items-center p-2 bg-body-tertiary rounded">
+                <span class="ms-2 small text-body-secondary fw-bold">Clase activa:</span>
+                <input type="text" id="labelInput" class="form-control form-control-sm text-center fw-bold" style="width: 150px;" readonly placeholder="Ninguna" />
+                <div class="ms-auto">
+                  <button class="btn btn-sm btn-outline-warning" id="undoBtn">Deshacer</button>
+                  <button class="btn btn-sm btn-outline-danger" id="clearBtn">Limpiar</button>
+                  <button class="btn btn-sm btn-success fw-bold px-4 shadow-sm" id="saveBtn">Guardar Anotación</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-9 mb-3">
+                <div class="canvas-wrap shadow-sm">
+                  <canvas id="imageCanvas"></canvas>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <div class="card shadow-sm h-100">
+                  <div class="card-header bg-body-tertiary fw-bold py-2">Objetos en imagen</div>
+                  <div class="card-body p-2" id="objectList" style="overflow-y: auto; max-height: 55vh;">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <h2>Estado</h2>
-        <div class="status" id="statusBox">Listo.</div>
-        <div class="progress"><div id="progressBar"></div></div>
+      <div class="tab-pane fade" id="pane-train" role="tabpanel">
+        <div class="row justify-content-center">
+          <div class="col-md-5 col-lg-4">
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-body-tertiary fw-bold border-bottom">Configuración de Red Neuronal</div>
+              <div class="card-body bg-body">
+                <div class="mb-3">
+                  <label class="form-label small">Modelo Base (Backbone)</label>
+                  <select class="form-select form-select-sm" id="backboneSelect">
+                    <option value="EfficientNetB0" selected>EfficientNetB0 (Recomendado)</option>
+                    <option value="MobileNetV2">MobileNetV2 (Más ligero)</option>
+                  </select>
+                </div>
+                <div class="row g-2 mb-3">
+                  <div class="col-6"><label class="form-label small">Épocas</label><input type="number" class="form-control form-control-sm" id="epochsInput" value="30" min="1" /></div>
+                  <div class="col-6"><label class="form-label small">Batch Size</label><input type="number" class="form-control form-control-sm" id="batchInput" value="8" min="1" /></div>
+                  <div class="col-6"><label class="form-label small">Tamaño Imagen (px)</label><input type="number" class="form-control form-control-sm" id="imgszInput" value="416" step="32" /></div>
+                  <div class="col-6"><label class="form-label small">Tamaño Grilla</label><input type="number" class="form-control form-control-sm" id="gridInput" value="10" min="4" max="20" /></div>
+                  <div class="col-12"><label class="form-label small">Ratio Validación</label><input type="number" class="form-control form-control-sm" id="valInput" value="0.2" min="0.1" max="0.4" step="0.05" /></div>
+                </div>
+                <hr class="border-secondary">
+                <button class="btn btn-outline-info w-100 mb-2 fw-bold" id="exportBtn">1. Exportar Dataset</button>
+                <button class="btn btn-primary w-100 fw-bold shadow-sm" id="trainBtn">2. ¡Iniciar Entrenamiento!</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-7 col-lg-6 mt-4 mt-md-0">
+            <div class="card shadow-sm border-0 h-100">
+              <div class="card-header bg-body-tertiary fw-bold d-flex justify-content-between align-items-center">
+                <span>Progreso</span>
+                <span class="badge bg-secondary" id="trainState">Idle</span>
+              </div>
+              <div class="card-body d-flex flex-column justify-content-center bg-body">
+                <div class="mb-4">
+                  <div class="d-flex justify-content-between mb-1">
+                    <span class="small text-body-secondary">Progreso global</span>
+                    <span class="small fw-bold text-primary" id="progressPercent">0%</span>
+                  </div>
+                  <div class="progress" style="height: 20px;">
+                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <div class="alert alert-success mt-auto text-center shadow-sm" role="alert">
+                  <h6 class="alert-heading fw-bold mb-1">¿Terminó el entrenamiento?</h6>
+                  <button class="btn btn-warning btn-sm fw-bold px-4 text-dark shadow-sm mt-2" id="downloadModelBtn">
+                    Descargar Modelo (.keras)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <h2>Inferencia</h2>
-        <div class="row">
-          <input type="file" id="predictInput" accept="image/*" style="max-width:340px; margin:0;" />
-          <input type="number" id="confInput" value="0.25" min="0.01" max="1" step="0.01" style="max-width:120px; margin:0;" />
-          <button id="predictBtn" class="btn info">Probar detección</button>
+      <div class="tab-pane fade" id="pane-inference" role="tabpanel">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            
+            <div class="d-flex align-items-center justify-content-center mb-3 gap-2">
+              <label class="form-label small fw-bold m-0 text-body-secondary">Filtro de Confianza Mínima:</label>
+              <input type="number" class="form-control form-control-sm text-center bg-body border-primary" id="confInput" value="0.50" min="0.01" max="1" step="0.05" style="width: 100px; font-weight: bold;" />
+            </div>
+
+            <ul class="nav nav-pills mb-3 border-bottom pb-3 justify-content-center" id="inferenceTypeTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold" data-bs-toggle="pill" data-bs-target="#inf-image" type="button" role="tab">📷 Subir Foto Estática</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-bold" data-bs-toggle="pill" data-bs-target="#inf-webcam" type="button" role="tab" id="tabWebcamBtn">🎥 Detección en Vivo (Webcam)</button>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="infTabsContent">
+              
+              <div class="tab-pane fade" id="inf-image" role="tabpanel">
+                <div class="card shadow-sm mb-4 border-0">
+                  <div class="card-body p-3 bg-body-tertiary rounded d-flex gap-3 align-items-end flex-wrap border">
+                    <div class="flex-grow-1">
+                      <label class="form-label small text-body-secondary fw-bold mb-1">Cargar imagen de prueba</label>
+                      <input class="form-control" type="file" id="predictInput" accept="image/*" />
+                    </div>
+                    <div>
+                      <button class="btn btn-primary px-4 fw-bold shadow-sm" id="predictBtn">Detectar en Foto</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card shadow-sm border-0">
+                  <div class="card-header bg-body-tertiary fw-bold d-flex justify-content-between align-items-center">
+                    <span>Resultado (Foto)</span>
+                  </div>
+                  <div class="card-body p-0 text-center bg-body">
+                    <img id="predictionPreview" class="img-fluid" style="display:none; max-height: 60vh; border-radius: 0 0 8px 8px; margin: 0 auto;" />
+                    <div class="p-5 text-body-secondary" id="inferencePlaceholder">
+                      <p class="mb-0">Sube una foto para ver las predicciones.</p>
+                    </div>
+                  </div>
+                  <div class="card-footer p-0 border-top-0">
+                    <div class="list-group list-group-flush rounded-bottom" id="predictionList"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade show active" id="inf-webcam" role="tabpanel">
+                <div class="card shadow-sm border-0">
+                  <div class="card-header bg-body-tertiary d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Video en Tiempo Real</span>
+                    <div>
+                      <button class="btn btn-sm btn-success fw-bold" id="startCamBtn">▶ Iniciar Cámara</button>
+                      <button class="btn btn-sm btn-danger fw-bold d-none" id="stopCamBtn">⏹ Detener</button>
+                    </div>
+                  </div>
+                  <div class="card-body p-3 bg-body text-center">
+                    <div class="video-wrapper">
+                      <video id="webcamVideo" autoplay playsinline muted></video>
+                      <canvas id="webcamOverlay"></canvas>
+                    </div>
+                    <div class="text-muted small mt-2 fw-bold" id="webcamStatus">Cámara apagada. Presiona Iniciar.</div>
+                  </div>
+                </div>
+              </div>
+
+            </div> </div>
         </div>
-        <div id="predictionList" style="margin-top:12px;"></div>
-        <img id="predictionPreview" class="preview" style="display:none;" />
       </div>
-    </main>
+
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
+    /* =========================================
+       1. TEMA CLARO / OSCURO
+       ========================================= */
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const htmlElement = document.documentElement;
+    const themeIconDark = document.getElementById('themeIconDark');
+    const themeIconLight = document.getElementById('themeIconLight');
+
+    const savedTheme = localStorage.getItem('vts-theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-bs-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+
+    function setTheme(theme) {
+      htmlElement.setAttribute('data-bs-theme', theme);
+      localStorage.setItem('vts-theme', theme);
+      if (theme === 'dark') {
+        themeIconDark.classList.remove('d-none');
+        themeIconLight.classList.add('d-none');
+      } else {
+        themeIconDark.classList.add('d-none');
+        themeIconLight.classList.remove('d-none');
+      }
+    }
+
+    /* =========================================
+       2. VARIABLES GLOBALES
+       ========================================= */
     const imageListEl = document.getElementById('imageList');
     const classListEl = document.getElementById('classList');
     const statusBox = document.getElementById('statusBox');
@@ -325,8 +348,10 @@
     const objectCount = document.getElementById('objectCount');
     const trainState = document.getElementById('trainState');
     const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
     const predictionList = document.getElementById('predictionList');
     const predictionPreview = document.getElementById('predictionPreview');
+    const trainSpinner = document.getElementById('trainSpinner');
 
     let dataset = [];
     let classes = [];
@@ -339,8 +364,14 @@
     let activeClass = null;
 
     const randomId = () => 'id_' + Math.random().toString(36).slice(2, 11);
-    const setStatus = (msg) => { statusBox.textContent = msg; };
+    const setStatus = (msg) => { 
+      const time = new Date().toLocaleTimeString();
+      statusBox.textContent = `[${time}] ${msg}`; 
+    };
 
+    /* =========================================
+       3. CLASES E IMAGENES
+       ========================================= */
     async function fetchClasses() {
       const res = await fetch('/api/classes');
       const data = await res.json();
@@ -355,14 +386,10 @@
     function renderClasses() {
       classListEl.innerHTML = '';
       classes.forEach((cls, idx) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'chip' + (activeClass === cls ? ' active' : '');
+        const wrap = document.createElement('span');
+        wrap.className = 'chip shadow-sm ' + (activeClass === cls ? 'active' : '');
         wrap.textContent = cls;
-        wrap.onclick = () => {
-          activeClass = cls;
-          labelInput.value = cls;
-          renderClasses();
-        };
+        wrap.onclick = () => { activeClass = cls; labelInput.value = cls; renderClasses(); };
         wrap.oncontextmenu = async (e) => {
           e.preventDefault();
           if (!confirm(`¿Eliminar la clase ${cls}?`)) return;
@@ -388,12 +415,12 @@
         labelInput.value = activeClass;
       }
       renderClasses();
-      setStatus('Clases actualizadas. Clic izquierdo = seleccionar. Clic derecho = eliminar.');
     }
 
     async function fetchImages() {
       const res = await fetch('/api/images');
       dataset = await res.json();
+      document.getElementById('totalImages').textContent = dataset.length;
       renderImageList();
       if (!currentImage && dataset.length) openImage(dataset[0].filename);
     }
@@ -402,12 +429,12 @@
       imageListEl.innerHTML = '';
       dataset.forEach(item => {
         const tile = document.createElement('div');
-        tile.className = 'image-tile' + (currentImage && currentImage.filename === item.filename ? ' active' : '');
+        tile.className = 'image-tile ' + (currentImage && currentImage.filename === item.filename ? 'active' : '');
         tile.innerHTML = `
-          <div class="image-thumb"><img src="${item.thumbnail_url || ('/uploads/' + item.filename)}" alt="${item.filename}" /></div>
-          <div class="image-meta">
-            <strong>${item.filename}</strong>
-            <small>${item.objects?.length || 0} objetos</small>
+          <div class="image-thumb"><img src="${item.thumbnail_url || ('/uploads/' + item.filename)}" alt="${item.filename}" loading="lazy"/></div>
+          <div class="image-meta fw-bold">
+            <span class="d-block text-truncate">${item.filename}</span>
+            <small class="${(item.objects?.length > 0) ? 'text-success' : 'text-body-tertiary'} fw-normal">${item.objects?.length || 0} obj</small>
           </div>`;
         tile.onclick = () => openImage(item.filename);
         imageListEl.appendChild(tile);
@@ -419,15 +446,19 @@
       const data = await res.json();
       currentImage = data.image;
       boxes = [...(currentImage.objects || [])];
+      
       currentImageName.textContent = currentImage.filename;
       currentResolution.textContent = `${currentImage.width} x ${currentImage.height}`;
       objectCount.textContent = boxes.length;
+      
       renderImageList();
       renderObjects();
       loadCanvasImage(filename);
-      setStatus(`Imagen cargada: ${filename}`);
     }
 
+    /* =========================================
+       4. CANVAS Y DIBUJO
+       ========================================= */
     function loadCanvasImage(filename) {
       imgObj = new Image();
       imgObj.onload = function() {
@@ -442,30 +473,33 @@
       if (!imgObj) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imgObj, 0, 0);
+      
       boxes.forEach((b, index) => {
-        ctx.strokeStyle = '#25d366';
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#198754'; 
+        ctx.lineWidth = 3;
         ctx.strokeRect(b.xmin, b.ymin, b.xmax - b.xmin, b.ymax - b.ymin);
-        ctx.fillStyle = 'rgba(37,211,102,0.13)';
+        ctx.fillStyle = 'rgba(25, 135, 84, 0.15)';
         ctx.fillRect(b.xmin, b.ymin, b.xmax - b.xmin, b.ymax - b.ymin);
-        ctx.fillStyle = '#dffdea';
-        ctx.font = '15px Segoe UI';
-        const tag = `${index + 1}. ${b.label}`;
-        const textWidth = ctx.measureText(tag).width + 14;
-        const textY = Math.max(22, b.ymin - 8);
-        ctx.fillStyle = 'rgba(5,10,18,.82)';
-        ctx.fillRect(b.xmin, textY - 18, textWidth, 20);
-        ctx.fillStyle = '#25d366';
-        ctx.fillText(tag, b.xmin + 7, textY - 3);
+        
+        ctx.font = 'bold 16px sans-serif';
+        const tag = `${b.label}`;
+        const textWidth = ctx.measureText(tag).width + 16;
+        const textY = Math.max(24, b.ymin - 5);
+        
+        ctx.fillStyle = '#198754';
+        ctx.fillRect(b.xmin, textY - 22, textWidth, 24);
+        ctx.fillStyle = '#ffffff'; 
+        ctx.fillText(tag, b.xmin + 8, textY - 5);
       });
+
       if (isDrawing) {
         const x = Math.min(startX, tempX);
         const y = Math.min(startY, tempY);
         const w = Math.abs(tempX - startX);
         const h = Math.abs(tempY - startY);
-        ctx.strokeStyle = '#56b8ff';
+        ctx.strokeStyle = '#0d6efd'; 
         ctx.lineWidth = 2;
-        ctx.setLineDash([6, 4]);
+        ctx.setLineDash([5, 5]);
         ctx.strokeRect(x, y, w, h);
         ctx.setLineDash([]);
       }
@@ -481,143 +515,100 @@
       };
     }
 
-    function getActiveLabel() {
-      const label = labelInput.value.trim();
-      if (label) activeClass = label;
-      return label;
-    }
-
     canvas.addEventListener('mousedown', (evt) => {
       if (!currentImage) return;
-      const label = getActiveLabel();
-      if (!label) return setStatus('Primero selecciona o escribe una etiqueta.');
-      if (classes.length && !classes.includes(label)) return setStatus('La etiqueta no existe en la lista de clases.');
-      const p = getCanvasCoords(evt);
+      const label = labelInput.value.trim();
+      if (!label) return setStatus('Selecciona clase antes de dibujar.');
       isDrawing = true;
-      startX = tempX = p.x;
-      startY = tempY = p.y;
+      startX = tempX = getCanvasCoords(evt).x;
+      startY = tempY = getCanvasCoords(evt).y;
       draw();
     });
 
     canvas.addEventListener('mousemove', (evt) => {
       if (!isDrawing) return;
-      const p = getCanvasCoords(evt);
-      tempX = p.x;
-      tempY = p.y;
+      tempX = getCanvasCoords(evt).x;
+      tempY = getCanvasCoords(evt).y;
       draw();
     });
 
     window.addEventListener('mouseup', () => {
       if (!isDrawing) return;
       isDrawing = false;
-      const label = getActiveLabel();
+      const label = labelInput.value.trim();
       const xmin = Math.min(startX, tempX);
       const ymin = Math.min(startY, tempY);
       const xmax = Math.max(startX, tempX);
       const ymax = Math.max(startY, tempY);
-      if (Math.abs(xmax - xmin) < 5 || Math.abs(ymax - ymin) < 5) {
-        setStatus('La caja es muy pequeña.');
-        draw();
-        return;
+      if (Math.abs(xmax - xmin) > 5 && Math.abs(ymax - ymin) > 5) {
+        boxes.push({ id: randomId(), label, xmin, ymin, xmax, ymax });
+        renderObjects();
       }
-      boxes.push({ id: randomId(), label, xmin, ymin, xmax, ymax });
-      renderObjects();
       draw();
       objectCount.textContent = boxes.length;
-      setStatus(`Caja agregada: ${label}. Ya puedes seguir marcando más objetos en esta misma imagen.`);
     });
 
     function renderObjects() {
       objectList.innerHTML = '';
       if (!boxes.length) {
-        objectList.innerHTML = '<small>No hay cajas todavía.</small>';
+        objectList.innerHTML = '<div class="text-center text-body-tertiary small p-3">Vacío.</div>';
         return;
       }
       boxes.forEach((b, idx) => {
         const row = document.createElement('div');
-        row.className = 'object-row';
-        row.innerHTML = `<div><strong>${b.label}</strong><br><small>[${b.xmin}, ${b.ymin}] → [${b.xmax}, ${b.ymax}]</small></div>`;
-        const actions = document.createElement('div');
-        actions.className = 'row';
-        const useBtn = document.createElement('button');
-        useBtn.className = 'btn secondary';
-        useBtn.textContent = 'Usar';
-        useBtn.onclick = () => { activeClass = b.label; labelInput.value = b.label; renderClasses(); };
-        const del = document.createElement('button');
-        del.className = 'btn danger';
-        del.textContent = 'Eliminar';
-        del.onclick = () => {
-          boxes.splice(idx, 1);
-          renderObjects();
-          draw();
-          objectCount.textContent = boxes.length;
-        };
-        actions.appendChild(useBtn);
-        actions.appendChild(del);
-        row.appendChild(actions);
+        row.className = 'd-flex justify-content-between align-items-center mb-2 p-2 border rounded bg-body-tertiary';
+        row.innerHTML = `
+          <div><span class="badge bg-success">${b.label}</span><div class="small text-body-secondary mt-1">[${b.xmin}, ${b.ymin}] a [${b.xmax}, ${b.ymax}]</div></div>
+          <button class="btn btn-outline-danger btn-sm p-1 lh-1" onclick="deleteBox(${idx})" title="Eliminar"><svg width="14" height="14" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16"><path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .471-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/></svg></button>
+        `;
         objectList.appendChild(row);
       });
     }
 
+    window.deleteBox = function(idx) {
+      boxes.splice(idx, 1);
+      renderObjects(); draw(); objectCount.textContent = boxes.length;
+    }
+
+    /* =========================================
+       5. BOTONES ANOTACIÓN/ENTRENAMIENTO
+       ========================================= */
     document.getElementById('addClassBtn').onclick = async () => {
       const input = document.getElementById('classInput');
-      const cls = input.value.trim();
+      const cls = input.value.trim().toUpperCase(); 
       if (!cls) return;
       if (!classes.includes(cls)) classes.push(cls);
-      activeClass = cls;
-      labelInput.value = cls;
-      input.value = '';
+      activeClass = cls; labelInput.value = cls; input.value = '';
       await saveClasses();
     };
 
     document.getElementById('uploadBtn').onclick = async () => {
       const files = document.getElementById('fileInput').files;
-      if (!files.length) return setStatus('Selecciona al menos una imagen.');
+      if (!files.length) return;
+      setStatus('Subiendo...');
       const fd = new FormData();
       for (const f of files) fd.append('images', f);
-      const res = await fetch('/api/upload', {method: 'POST', body: fd});
-      const data = await res.json();
-      setStatus(`Imágenes subidas: ${data.uploaded?.length || 0}`);
+      await fetch('/api/upload', {method: 'POST', body: fd});
+      document.getElementById('fileInput').value = ""; 
       await fetchImages();
     };
 
     document.getElementById('saveBtn').onclick = async () => {
-      if (!currentImage) return setStatus('No hay imagen seleccionada.');
+      if (!currentImage) return;
       const res = await fetch(`/api/annotation/${currentImage.filename}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({objects: boxes})
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({objects: boxes})
       });
-      const data = await res.json();
-      if (!data.ok) return setStatus(data.error || 'No se pudo guardar.');
-      classes = data.classes || classes;
-      renderClasses();
-      setStatus(`Guardado XML: ${data.xml_file}\nGuardado JSON: ${data.json_file}\nObjetos: ${data.objects.length}`);
-      await fetchImages();
-      await openImage(currentImage.filename);
+      setStatus(`Anotaciones guardadas (${boxes.length} obj)`);
+      await fetchImages(); openImage(currentImage.filename);
     };
 
-    document.getElementById('clearBtn').onclick = () => {
-      boxes = [];
-      renderObjects();
-      draw();
-      objectCount.textContent = 0;
-      setStatus('Cajas limpiadas en memoria. Pulsa Guardar anotación para persistir cambios.');
-    };
-
-    document.getElementById('undoBtn').onclick = () => {
-      if (!boxes.length) return;
-      boxes.pop();
-      renderObjects();
-      draw();
-      objectCount.textContent = boxes.length;
-      setStatus('Última caja eliminada.');
-    };
+    document.getElementById('clearBtn').onclick = () => { boxes = []; renderObjects(); draw(); objectCount.textContent = 0; };
+    document.getElementById('undoBtn').onclick = () => { boxes.pop(); renderObjects(); draw(); objectCount.textContent = boxes.length; };
 
     document.getElementById('exportBtn').onclick = async () => {
-      const res = await fetch('/api/export');
-      const data = await res.json();
-      setStatus(`Dataset exportado para TensorFlow.\nClases: ${(data.meta.classes || []).join(', ')}\nImágenes anotadas: ${data.meta.num_annotated_images}`);
+      setStatus('Exportando...');
+      await fetch('/api/export');
+      setStatus('Dataset exportado con éxito.');
     };
 
     document.getElementById('trainBtn').onclick = async () => {
@@ -629,70 +620,192 @@
         grid_size: Number(document.getElementById('gridInput').value),
         val_ratio: Number(document.getElementById('valInput').value),
       };
-      const res = await fetch('/api/train', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!data.ok) return setStatus(data.error || 'No se pudo iniciar el entrenamiento.');
-      setStatus('Entrenamiento TensorFlow iniciado.');
+      setStatus('Iniciando...');
+      await fetch('/api/train', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
       startPolling();
     };
 
-    document.getElementById('downloadModelBtn').onclick = () => {
-      window.location.href = '/api/download/model';
-    };
+    document.getElementById('downloadModelBtn').onclick = () => { window.location.href = '/api/download/model'; };
 
+    /* =========================================
+       6. POLLING
+       ========================================= */
+    async function pollTrainingStatus() {
+      const res = await fetch('/api/train/status');
+      const data = await res.json();
+      
+      const s = data.status || 'idle';
+      trainState.className = `badge ${s==='running'?'bg-primary':s==='completed'?'bg-success':'bg-secondary'}`;
+      trainState.textContent = s.toUpperCase();
+      
+      const prog = data.progress || 0;
+      progressBar.style.width = `${prog}%`;
+      progressPercent.textContent = `${prog}%`;
+      trainSpinner.style.display = (s === 'running') ? 'block' : 'none';
+
+      if (data.message && !statusBox.textContent.includes(data.message)) setStatus(data.message);
+
+      if (s === 'running' && !pollTimer) startPolling();
+      else if (s !== 'running' && pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+    function startPolling() { if (pollTimer) clearInterval(pollTimer); pollTrainingStatus(); pollTimer = setInterval(pollTrainingStatus, 2000); }
+
+    /* =========================================
+       7. INFERENCIA ESTATICA (FOTO)
+       ========================================= */
     document.getElementById('predictBtn').onclick = async () => {
       const file = document.getElementById('predictInput').files[0];
-      if (!file) return setStatus('Selecciona una imagen para inferencia.');
+      if (!file) return setStatus('Selecciona una imagen.');
+      setStatus('Procesando imagen...');
       const fd = new FormData();
       fd.append('image', file);
       fd.append('conf', document.getElementById('confInput').value || '0.25');
       const res = await fetch('/api/predict', {method: 'POST', body: fd});
       const data = await res.json();
-      if (!data.ok) return setStatus(data.error || 'No se pudo correr la inferencia.');
-      predictionList.innerHTML = '';
-      (data.detections || []).forEach(det => {
-        const row = document.createElement('div');
-        row.className = 'detect-row';
-        row.innerHTML = `<div><strong>${det.label}</strong><br><small>Confianza: ${det.confidence} | [${det.xmin}, ${det.ymin}] → [${det.xmax}, ${det.ymax}]</small></div>`;
-        predictionList.appendChild(row);
-      });
+      if (!data.ok) return setStatus(data.error);
+      
+      document.getElementById('inferencePlaceholder').style.display = 'none';
       predictionPreview.src = data.preview_url + `?t=${Date.now()}`;
       predictionPreview.style.display = 'block';
-      setStatus(`Inferencia completada. Detecciones: ${(data.detections || []).length}`);
+      
+      predictionList.innerHTML = '';
+      if(data.detections.length === 0) {
+        predictionList.innerHTML = '<div class="list-group-item bg-body text-body-tertiary text-center">Sin detecciones.</div>';
+      } else {
+        data.detections.forEach(det => {
+          predictionList.innerHTML += `
+            <div class="list-group-item bg-body-tertiary text-body border-secondary d-flex justify-content-between align-items-center">
+              <div><strong class="text-success">${det.label}</strong><div class="small text-body-secondary">[X: ${det.xmin}, Y: ${det.ymin}]</div></div>
+              <span class="badge bg-primary rounded-pill shadow-sm">${(det.confidence * 100).toFixed(1)}%</span>
+            </div>`;
+        });
+      }
+      setStatus(`Inferencia terminada: ${data.detections.length} objetos.`);
     };
 
-    async function pollTrainingStatus() {
-      const res = await fetch('/api/train/status');
-      const data = await res.json();
-      trainState.textContent = data.status || 'idle';
-      progressBar.style.width = `${data.progress || 0}%`;
-      if (data.message) setStatus(data.message + (data.best_model ? `\nModelo: ${data.best_model}` : ''));
-      if (data.status === 'running') {
-        if (!pollTimer) startPolling();
-      } else if (pollTimer) {
-        clearInterval(pollTimer);
-        pollTimer = null;
+    /* =========================================
+       8. INFERENCIA EN TIEMPO REAL (MÁS FLUIDA)
+       ========================================= */
+    const video = document.getElementById('webcamVideo');
+    const overlay = document.getElementById('webcamOverlay');
+    const overlayCtx = overlay.getContext('2d');
+    const startCamBtn = document.getElementById('startCamBtn');
+    const stopCamBtn = document.getElementById('stopCamBtn');
+    const webcamStatus = document.getElementById('webcamStatus');
+    const tabWebcamBtn = document.getElementById('tabWebcamBtn');
+    
+    let camStream = null;
+    let isPredicting = false;
+    let stopVideoLoop = false;
+
+    // Encender cámara
+    startCamBtn.onclick = async () => {
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: "environment"}});
+        video.srcObject = camStream;
+        
+        video.onloadedmetadata = () => {
+          overlay.width = video.videoWidth;
+          overlay.height = video.videoHeight;
+          startCamBtn.classList.add('d-none');
+          stopCamBtn.classList.remove('d-none');
+          webcamStatus.innerHTML = '<span class="text-success">🟢 Cámara Activa. Analizando...</span>';
+          stopVideoLoop = false;
+          
+          // Iniciar el bucle fluido inmediatamente
+          requestAnimationFrame(predictWebcamLoop);
+        };
+      } catch (err) {
+        alert("Error al acceder a la cámara. Revisa los permisos de tu navegador.");
+        console.error(err);
       }
-    }
+    };
 
-    function startPolling() {
-      if (pollTimer) clearInterval(pollTimer);
-      pollTrainingStatus();
-      pollTimer = setInterval(pollTrainingStatus, 4000);
+    // Detener cámara
+    function turnOffCam() {
+      if(camStream) camStream.getTracks().forEach(t => t.stop());
+      video.srcObject = null;
+      camStream = null;
+      stopVideoLoop = true;
+      overlayCtx.clearRect(0, 0, overlay.width, overlay.height);
+      startCamBtn.classList.remove('d-none');
+      stopCamBtn.classList.add('d-none');
+      webcamStatus.innerHTML = 'Cámara apagada.';
     }
+    
+    stopCamBtn.onclick = turnOffCam;
 
-    labelInput.addEventListener('change', () => {
-      activeClass = labelInput.value.trim() || null;
-      renderClasses();
+    // Si cambia de pestaña, apaga la cámara para ahorrar recursos
+    document.querySelectorAll('button[data-bs-toggle="tab"], button[data-bs-toggle="pill"]').forEach(btn => {
+        btn.addEventListener('shown.bs.tab', (e) => {
+            if (e.target.id !== 'tabWebcamBtn') turnOffCam();
+        });
     });
 
+    // Bucle continuo (sin delay artificial)
+    async function predictWebcamLoop() {
+      if(stopVideoLoop || !camStream) return;
+      
+      if(!isPredicting) {
+          isPredicting = true;
+
+          // Extraer frame
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = video.videoWidth;
+          tempCanvas.height = video.videoHeight;
+          tempCanvas.getContext('2d').drawImage(video, 0, 0);
+          
+          // Usamos calidad 0.7 para que la imagen base64 pese menos y la red viaje rápido
+          const b64 = tempCanvas.toDataURL('image/jpeg', 0.7); 
+
+          try {
+              const res = await fetch('/api/predict_frame', {
+                  method: 'POST',
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({ 
+                      image: b64, 
+                      conf: document.getElementById('confInput').value || '0.40' 
+                  })
+              });
+              const data = await res.json();
+              
+              // Limpiar canvas ANTES de dibujar las nuevas cajas
+              overlayCtx.clearRect(0, 0, overlay.width, overlay.height);
+              
+              if(data.ok && data.detections) {
+                  data.detections.forEach(d => {
+                      // Estilo de las cajas (Verde tipo Terminator/Cyborg)
+                      overlayCtx.strokeStyle = '#0d6efd';
+                      overlayCtx.lineWidth = 4;
+                      overlayCtx.strokeRect(d.xmin, d.ymin, d.xmax - d.xmin, d.ymax - d.ymin);
+                      
+                      const text = `${d.label} ${(d.confidence*100).toFixed(0)}%`;
+                      overlayCtx.font = 'bold 20px sans-serif';
+                      const tWidth = overlayCtx.measureText(text).width + 16;
+                      
+                      // Etiqueta
+                      overlayCtx.fillStyle = '#0d6efd';
+                      overlayCtx.fillRect(d.xmin, d.ymin - 30, tWidth, 30);
+                      overlayCtx.fillStyle = '#ffffff';
+                      overlayCtx.fillText(text, d.xmin + 8, d.ymin - 8);
+                  });
+              }
+          } catch(e) {
+              console.error("Frame drop", e);
+          }
+          
+          isPredicting = false;
+      }
+      
+      // Pedirle al navegador que ejecute la función en el próximo refresco de pantalla
+      requestAnimationFrame(predictWebcamLoop);
+    }
+
+    // Iniciar datos
     fetchClasses();
     fetchImages();
     pollTrainingStatus();
+
   </script>
 </body>
 </html>

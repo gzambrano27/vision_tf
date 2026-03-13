@@ -3,6 +3,8 @@ import os
 import shutil
 import subprocess
 import sys
+import base64
+import io
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -309,7 +311,7 @@ def api_train():
 
     meta = prepare_export()
     if meta['num_annotated_images'] < 5:
-        return jsonify({'ok': False, 'error': 'Necesitas al menos 5 imágenes anotadas para un entrenamiento mínimamente útil.'}), 400
+        return jsonify({'ok': False, 'error': 'Necesitas al menos 5 imágenes anotadas.'}), 400
     if len(meta['classes']) < 1:
         return jsonify({'ok': False, 'error': 'No hay clases definidas.'}), 400
 
@@ -381,6 +383,7 @@ def get_model_and_meta():
     return model, meta
 
 
+# ------- ENDPOINT 1: PREDICT ARCHIVO -------
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
     file = request.files.get('image')
@@ -398,6 +401,50 @@ def api_predict():
     file.save(temp_input)
 
     img = Image.open(temp_input).convert('RGB')
+    detections, img_width, img_height = process_inference(img, model, meta, conf)
+
+    # Dibujar preview estático
+    preview = img.copy()
+    if detections:
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(preview)
+        for det in detections:
+            x1, y1, x2, y2 = det['xmin'], det['ymin'], det['xmax'], det['ymax']
+            draw.rectangle([x1, y1, x2, y2], outline=(34, 197, 94), width=3)
+            label_text = f"{det['label']} {det['confidence']}"
+            draw.text((x1 + 4, max(4, y1 - 16)), label_text, fill=(34, 197, 94))
+            
+    output_name = f'pred_{Path(filename).stem}.jpg'
+    output_path = PREDICTIONS_DIR / output_name
+    preview.save(output_path)
+    
+    return jsonify({'ok': True, 'detections': detections, 'preview_url': f'/predictions/{output_name}'})
+
+
+# ------- ENDPOINT 2: PREDICT VIDEO (BASE64) -------
+@app.route('/api/predict_frame', methods=['POST'])
+def api_predict_frame():
+    payload = request.get_json(silent=True)
+    if not payload or 'image' not in payload:
+        return jsonify({'ok': False, 'error': 'No se recibió frame de video'}), 400
+
+    conf = float(payload.get('conf', 0.25))
+    model, meta = get_model_and_meta()
+    if model is None:
+        return jsonify({'ok': False, 'error': 'Modelo no entrenado.'}), 400
+
+    # Decodificar Base64
+    b64_data = payload['image'].split(',')[1] if ',' in payload['image'] else payload['image']
+    image_data = base64.b64decode(b64_data)
+    img = Image.open(io.BytesIO(image_data)).convert('RGB')
+
+    detections, _, _ = process_inference(img, model, meta, conf)
+    return jsonify({'ok': True, 'detections': detections})
+
+
+# Función compartida para inferencia lógica matemática
+def process_inference(img, model, meta, conf):
+    import numpy as np
     original_w, original_h = img.size
     imgsz = int(meta['imgsz'])
     grid = int(meta['grid_size'])
@@ -436,7 +483,6 @@ def api_predict():
             labels.append(classes[cls_idx])
 
     detections = []
-    preview = img.copy()
     if boxes:
         selected = tf.image.non_max_suppression(
             boxes=np.array([[b[1]*original_w, b[0]*original_h, b[3]*original_w, b[2]*original_h] for b in boxes], dtype=np.float32),
@@ -445,26 +491,19 @@ def api_predict():
             iou_threshold=0.45,
             score_threshold=conf,
         ).numpy().tolist()
-        from PIL import ImageDraw
-        draw = ImageDraw.Draw(preview)
+        
         for idx in selected:
             ymin, xmin, ymax, xmax = boxes[idx]
-            x1, y1, x2, y2 = xmin * original_w, ymin * original_h, xmax * original_w, ymax * original_h
-            draw.rectangle([x1, y1, x2, y2], outline=(34, 197, 94), width=3)
-            label = f"{labels[idx]} {scores[idx]:.2f}"
-            draw.text((x1 + 4, max(4, y1 - 16)), label, fill=(34, 197, 94))
             detections.append({
                 'label': labels[idx],
                 'confidence': round(float(scores[idx]), 4),
-                'xmin': round(float(x1), 2),
-                'ymin': round(float(y1), 2),
-                'xmax': round(float(x2), 2),
-                'ymax': round(float(y2), 2),
+                'xmin': round(float(xmin * original_w), 2),
+                'ymin': round(float(ymin * original_h), 2),
+                'xmax': round(float(xmax * original_w), 2),
+                'ymax': round(float(ymax * original_h), 2),
             })
-    output_name = f'pred_{Path(filename).stem}.jpg'
-    output_path = PREDICTIONS_DIR / output_name
-    preview.save(output_path)
-    return jsonify({'ok': True, 'detections': detections, 'preview_url': f'/predictions/{output_name}'})
+            
+    return detections, original_w, original_h
 
 
 @app.route('/api/download/model', methods=['GET'])
